@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Aptitude & Grammar Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Custom scrollbar for better mobile experience */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex items-center justify-center p-4 md:p-6 lg:p-8 2xl:p-10">
+
+    <div id="app" class="w-full max-w-4xl 2xl:max-w-5xl transition-all duration-300">
+        <!-- Content gets injected here by JavaScript -->
+    </div>
+
+    <script>
+        // Database of 120 Questions (60 Math, 60 Grammar split into 20 Easy, 20 Medium, 20 Hard)
+        const allQuizData = [
+            // ================= MATH: EASY (20 Questions) =================
+            { cat: 'math', diff: 'easy', q: "A product costs ₹500 and is sold at 20% profit. What is the selling price?", options: ["₹550", "₹600", "₹620", "₹580"], answer: 1, hint: "Formula: Selling Price (SP) = Cost Price (CP) + (Profit % × CP)." },
+            { cat: 'math', diff: 'easy', q: "What is 15% of 200?", options: ["20", "25", "30", "35"], answer: 2, hint: "Formula: (Percentage / 100) × Value." },
+            { cat: 'math', diff: 'easy', q: "If A : B = 3 : 4 and A is 15, what is B?", options: ["16", "20", "24", "12"], answer: 1, hint: "Formula: If 3 units = 15, then 1 unit = 5. So, 4 units = 20." },
+            { cat: 'math', diff: 'easy', q: "The average of 4, 8, 12, and 16 is:", options: ["8", "10", "12", "14"], answer: 1, hint: "Formula: Average = Sum of elements / Number of elements. (4+8+12+16)/4 = 10." },
+            { cat: 'math', diff: 'easy', q: "Find the simple interest on ₹1,000 at 5% per annum for 2 years.", options: ["₹50", "₹100", "₹150", "₹200"], answer: 1, hint: "Formula: SI = (P × R × T) / 100. (1000 × 5 × 2) / 100 = 100." },
+            { cat: 'math', diff: 'easy', q: "Convert 36 km/hr to m/s.", options: ["10 m/s", "12 m/s", "15 m/s", "18 m/s"], answer: 0, hint: "Formula: Speed in m/s = Speed in km/hr × (5 / 18). 36 × (5/18) = 10." },
+            { cat: 'math', diff: 'easy', q: "If the cost price of an item is ₹200 and it is sold for ₹150, what is the loss percentage?", options: ["20%", "25%", "30%", "15%"], answer: 1, hint: "Formula: Loss % = (Loss / CP) × 100. (50 / 200) × 100 = 25%." },
+            { cat: 'math', diff: 'easy', q: "A man covers 20 km in 2 hours. What is his speed?", options: ["5 km/hr", "10 km/hr", "15 km/hr", "20 km/hr"], answer: 1, hint: "Formula: Speed = Distance / Time. 20 / 2 = 10." },
+            { cat: 'math', diff: 'easy', q: "Solve: 25 + 15 × 2", options: ["80", "55", "70", "60"], answer: 1, hint: "Rule: BODMAS. Multiplication comes before addition. 25 + 30 = 55." },
+            { cat: 'math', diff: 'easy', q: "If 5 men can do a work in 10 days, how many days will 1 man take?", options: ["2 days", "15 days", "50 days", "25 days"], answer: 2, hint: "Formula: M1 × D1 = M2 × D2. 5 × 10 = 1 × D2. D2 = 50." },
+            { cat: 'math', diff: 'easy', q: "Simplify: 4/5 of 100", options: ["60", "80", "75", "90"], answer: 1, hint: "Rule: 'Of' means multiplication. (4/5) × 100 = 80." },
+            { cat: 'math', diff: 'easy', q: "What is the square root of 144?", options: ["10", "12", "14", "16"], answer: 1, hint: "Basic Math: 12 × 12 = 144." },
+            { cat: 'math', diff: 'easy', q: "A train 100m long passes a pole in 5 seconds. Find its speed in m/s.", options: ["15 m/s", "20 m/s", "25 m/s", "30 m/s"], answer: 1, hint: "Formula: Speed = Length of train / Time taken to pass pole. 100 / 5 = 20." },
+            { cat: 'math', diff: 'easy', q: "The sum of two numbers is 30 and their difference is 10. What is the larger number?", options: ["15", "20", "25", "10"], answer: 1, hint: "Equations: x + y = 30; x - y = 10. Adding them: 2x = 40 => x = 20." },
+            { cat: 'math', diff: 'easy', q: "Which of the following is a prime number?", options: ["9", "15", "21", "23"], answer: 3, hint: "Definition: A prime number is only divisible by 1 and itself." },
+            { cat: 'math', diff: 'easy', q: "10% of x is 50. What is x?", options: ["100", "500", "200", "250"], answer: 1, hint: "Equation: (10/100) × x = 50 => x = 500." },
+            { cat: 'math', diff: 'easy', q: "A car uses 5 liters of petrol to travel 100 km. How many liters are needed for 250 km?", options: ["10", "12.5", "15", "20"], answer: 1, hint: "Unitary Method: 100km = 5L => 1km = 5/100L. 250km = (5/100) × 250 = 12.5L." },
+            { cat: 'math', diff: 'easy', q: "Express 3/4 as a percentage.", options: ["60%", "70%", "75%", "80%"], answer: 2, hint: "Formula: Fraction × 100. (3/4) × 100 = 75%." },
+            { cat: 'math', diff: 'easy', q: "Find the missing number in the series: 2, 4, 8, 16, __", options: ["24", "30", "32", "36"], answer: 2, hint: "Pattern: Each number is multiplied by 2." },
+            { cat: 'math', diff: 'easy', q: "Calculate the perimeter of a rectangle with length 10m and width 5m.", options: ["15m", "30m", "50m", "20m"], answer: 1, hint: "Formula: Perimeter = 2(Length + Width). 2(10 + 5) = 30m." },
+
+            // ================= MATH: MEDIUM (20 Questions) =================
+            { cat: 'math', diff: 'medium', q: "A student needs 40% marks to pass an exam. He scores 160 marks and fails by 40 marks. What are the maximum marks?", options: ["400", "450", "500", "600"], answer: 2, hint: "Formula: Passing Marks = (Pass % / 100) × Max Marks. 160 + 40 = 200 = 40% of Max. Max = 500." },
+            { cat: 'math', diff: 'medium', q: "If the price of a laptop increases by 10% and then decreases by 10%, what is the net change?", options: ["0% change", "1% increase", "1% decrease", "10% decrease"], answer: 2, hint: "Formula: Net % change = x + y + (xy / 100). Here, x = +10, y = -10. Result = -1%." },
+            { cat: 'math', diff: 'medium', q: "A's salary is 25% more than B's. By what percentage is B's salary less than A's?", options: ["20%", "25%", "16.66%", "30%"], answer: 0, hint: "Formula: Required % = [R / (100 + R)] × 100. [25 / 125] × 100 = 20%." },
+            { cat: 'math', diff: 'medium', q: "Find the simple interest on ₹5,000 at a rate of 8% per annum for 3 years.", options: ["₹1,000", "₹1,200", "₹1,500", "₹1,800"], answer: 1, hint: "Formula: Simple Interest (SI) = (Principal × Rate × Time) / 100." },
+            { cat: 'math', diff: 'medium', q: "If A : B = 3 : 4 and B : C = 8 : 9, find A : B : C.", options: ["3 : 4 : 9", "6 : 8 : 9", "8 : 9 : 12", "3 : 8 : 9"], answer: 1, hint: "Concept Rule: Make the common term (B) equal in both ratios by multiplying A:B by 2." },
+            { cat: 'math', diff: 'medium', q: "₹1,200 is divided between A and B in the ratio 5 : 7. What is B's share?", options: ["₹500", "₹600", "₹700", "₹800"], answer: 2, hint: "Formula: Share of B = (Ratio of B / Total Ratio) × Total Amount. (7/12) × 1200." },
+            { cat: 'math', diff: 'medium', q: "The present ages of A and B are in the ratio 4:5. After 5 years, the ratio will be 5:6. What is A's present age?", options: ["16", "20", "24", "25"], answer: 1, hint: "Formula: (4x + 5) / (5x + 5) = 5/6. Cross multiply to find x = 5. A's age = 4x = 20." },
+            { cat: 'math', diff: 'medium', q: "If A can complete a work in 10 days and B can complete the same work in 15 days, how long will A and B take together?", options: ["5 days", "6 days", "8 days", "12 days"], answer: 1, hint: "Formula: Time taken together = (xy) / (x + y). (10 × 15) / (25) = 6." },
+            { cat: 'math', diff: 'medium', q: "A and B can do a piece of work in 12 days. A alone can do it in 20 days. How many days will B take alone?", options: ["15 days", "24 days", "30 days", "40 days"], answer: 2, hint: "Formula: B's 1-day work = (A+B)'s 1-day work - A's 1-day work. (1/12) - (1/20) = 1/30." },
+            { cat: 'math', diff: 'medium', q: "15 men can build a wall in 20 days. How many men are required to build the same wall in 12 days?", options: ["20", "25", "30", "35"], answer: 1, hint: "Formula: M1 × D1 = M2 × D2. 15 × 20 = M2 × 12. M2 = 25." },
+            { cat: 'math', diff: 'medium', q: "Pipe A fills a tank in 10 hours and Pipe B empties it in 15 hours. If both open simultaneously, when will it be full?", options: ["20 hours", "25 hours", "30 hours", "12 hours"], answer: 2, hint: "Formula: Net work done in 1 hour = (1/10) - (1/15) = 1/30. So, 30 hours." },
+            { cat: 'math', diff: 'medium', q: "Two trains 100m and 150m long cross each other in 10 seconds traveling in opposite directions. Find relative speed.", options: ["15 m/s", "20 m/s", "25 m/s", "30 m/s"], answer: 2, hint: "Formula: Relative Speed = (Total Length) / Time. (100 + 150) / 10 = 25 m/s." },
+            { cat: 'math', diff: 'medium', q: "A boat travels downstream at 14 km/hr and upstream at 10 km/hr. Speed of the boat in still water?", options: ["2 km/hr", "4 km/hr", "12 km/hr", "24 km/hr"], answer: 2, hint: "Formula: Speed in still water = 1/2 × (Downstream + Upstream). 1/2 × (14 + 10) = 12." },
+            { cat: 'math', diff: 'medium', q: "A person covers half his journey at 40 km/hr and the other half at 60 km/hr. What is his average speed?", options: ["48 km/hr", "50 km/hr", "52 km/hr", "45 km/hr"], answer: 0, hint: "Formula: Average Speed for equal distances = (2xy) / (x + y). (2 × 40 × 60) / 100 = 48." },
+            { cat: 'math', diff: 'medium', q: "A sum doubles itself in 5 years at simple interest. What is the rate of interest?", options: ["15%", "20%", "25%", "10%"], answer: 1, hint: "Formula: R = [(N - 1) × 100] / T, where N is times multiplied. [(2-1)×100]/5 = 20%." },
+            { cat: 'math', diff: 'medium', q: "A shopkeeper sells an article for ₹720, suffering a loss of 10%. What is the cost price?", options: ["₹792", "₹800", "₹810", "₹850"], answer: 1, hint: "Formula: CP = (SP × 100) / (100 - Loss %). (720 × 100) / 90 = 800." },
+            { cat: 'math', diff: 'medium', q: "Find the compound interest on ₹10,000 for 2 years at 10% per annum.", options: ["₹2,000", "₹2,100", "₹2,200", "₹2,500"], answer: 1, hint: "Formula: Amount = P(1 + R/100)^T. CI = Amount - P. 10000(1.1)^2 = 12100. CI = 2100." },
+            { cat: 'math', diff: 'medium', q: "A bag contains 50p, 25p, and 10p coins in ratio 5:9:4, amounting to ₹206. Find the number of 50p coins.", options: ["100", "150", "200", "250"], answer: 2, hint: "Equation: 5x(0.50) + 9x(0.25) + 4x(0.10) = 206 => 5.15x = 206 => x = 40. 50p coins = 5×40 = 200." },
+            { cat: 'math', diff: 'medium', q: "A is twice as good a workman as B and together they finish a piece of work in 14 days. Days for A alone?", options: ["21", "28", "42", "18"], answer: 0, hint: "Efficiency A:B = 2:1. Total = 3 units/day. Total work = 3 × 14 = 42. A's time = 42/2 = 21." },
+            { cat: 'math', diff: 'medium', q: "A man walking at 3/4 of his usual speed reaches his office 20 minutes late. Find his usual time.", options: ["40 mins", "60 mins", "80 mins", "45 mins"], answer: 1, hint: "Rule: Time & Speed are inversely proportional. T / (3/4) = T + 20 => 4T/3 - T = 20 => T = 60." },
+
+            // ================= MATH: HARD (20 Questions) =================
+            { cat: 'math', diff: 'hard', q: "A dishonest dealer professes to sell at CP, but uses a false weight of 900g for 1 kg. Profit percentage?", options: ["10%", "11.11%", "9%", "12.5%"], answer: 1, hint: "Formula: Profit % = (Error / True Value - Error) × 100. (100 / 900) × 100 = 11.11%." },
+            { cat: 'math', diff: 'hard', q: "The difference between CI and SI on a sum for 2 years at 5% per annum is ₹25. Find the sum.", options: ["₹5,000", "₹8,000", "₹10,000", "₹12,000"], answer: 2, hint: "Formula: Difference for 2 years = P × (R/100)². 25 = P × (25/10000) => P = 10,000." },
+            { cat: 'math', diff: 'hard', q: "A container contains 40 liters of milk. 4 liters are drawn and replaced by water. This is repeated twice more. Milk left?", options: ["29.16 L", "28.5 L", "30 L", "32.4 L"], answer: 0, hint: "Formula: Final Amount = Initial × (1 - replacement/total)^n. 40 × (1 - 4/40)^3 = 29.16." },
+            { cat: 'math', diff: 'hard', q: "In how many ways can the letters of the word 'APPLE' be arranged?", options: ["120", "60", "24", "48"], answer: 1, hint: "Formula: n! / (p!q!). 5 letters, 'P' repeats twice. 5! / 2! = 120 / 2 = 60." },
+            { cat: 'math', diff: 'hard', q: "A box contains 5 red, 4 blue, and 3 green balls. If 2 balls are drawn at random, probability they are red?", options: ["5/33", "5/12", "1/6", "10/33"], answer: 0, hint: "Probability = Favorable Outcomes / Total Outcomes. C(5,2) / C(12,2) = 10 / 66 = 5/33." },
+            { cat: 'math', diff: 'hard', q: "Two trains running in the same direction at 40 km/hr and 22 km/hr cross each other. Fast train completely passes a man in the slower train in 5s. Length of fast train?", options: ["20m", "25m", "30m", "50m"], answer: 1, hint: "Relative speed = 40 - 22 = 18 km/hr = 5 m/s. Length = Speed × Time = 5 × 5 = 25m." },
+            { cat: 'math', diff: 'hard', q: "A, B, C start a business. A invests 3 times as much as B, and B invests 2/3 of what C invests. Ratio of capitals?", options: ["6:2:3", "3:1:2", "6:3:2", "2:3:6"], answer: 0, hint: "Assume C=3x. B=2x. A = 3(2x) = 6x. Ratio A:B:C = 6x:2x:3x = 6:2:3." },
+            { cat: 'math', diff: 'hard', q: "If x + 1/x = 4, find the value of x² + 1/x².", options: ["16", "14", "18", "12"], answer: 1, hint: "Formula: (x + 1/x)² = x² + 1/x² + 2. So, 4² = x² + 1/x² + 2 => 16 - 2 = 14." },
+            { cat: 'math', diff: 'hard', q: "A sum of money invested at CI amounts to ₹800 in 3 years and to ₹840 in 4 years. The rate of interest is:", options: ["2.5%", "4%", "5%", "6.66%"], answer: 2, hint: "SI on ₹800 for 1 year = ₹40. Rate = (40 / 800) × 100 = 5%." },
+            { cat: 'math', diff: 'hard', q: "A clock is set right at 5 AM. It loses 16 minutes in 24 hours. What will be the true time when the clock indicates 10 PM on 4th day?", options: ["11 PM", "10:30 PM", "11:30 PM", "12 AM"], answer: 0, hint: "Time from 5 AM 1st day to 10 PM 4th day = 89 hrs. 23 hrs 44 min of this clock = 24 hrs correct. True time = 90 hrs from 5AM = 11 PM." },
+            { cat: 'math', diff: 'hard', q: "What is the unit digit in the product (3^65 × 6^59 × 7^71)?", options: ["1", "2", "4", "6"], answer: 2, hint: "Unit digits cyclicity: 3^65 -> 3, 6^59 -> 6, 7^71 -> 3. 3 × 6 × 3 = 54. Unit digit is 4." },
+            { cat: 'math', diff: 'hard', q: "Find the greatest number that will divide 43, 91 and 183 so as to leave the same remainder in each case.", options: ["4", "7", "9", "13"], answer: 0, hint: "Find HCF of differences: |91-43|, |183-91|, |183-43| => HCF of 48, 92, 140 is 4." },
+            { cat: 'math', diff: 'hard', q: "Two pipes A and B can fill a tank in 15 and 20 min respectively. Both are opened, but after 4 min A is turned off. Total time to fill?", options: ["10 min 40 sec", "11 min 45 sec", "14 min 40 sec", "12 min"], answer: 2, hint: "Part filled in 4 min = 4(1/15 + 1/20) = 4(7/60) = 7/15. Remaining = 8/15. Time by B = (8/15) × 20 = 32/3 = 10m 40s. Total = 14m 40s." },
+            { cat: 'math', diff: 'hard', q: "A rectangular park 60m x 40m has two concrete crossroads running in the middle, width 5m. Area of the roads?", options: ["475 m²", "500 m²", "525 m²", "450 m²"], answer: 0, hint: "Area = Area of vertical + Area of horizontal - Area of intersection = (60×5) + (40×5) - (5×5) = 300 + 200 - 25 = 475." },
+            { cat: 'math', diff: 'hard', q: "How many liters of pure acid are there in 8 liters of a 20% solution?", options: ["1.4", "1.5", "1.6", "2.0"], answer: 2, hint: "20% of 8 = 0.20 × 8 = 1.6 liters." },
+            { cat: 'math', diff: 'hard', q: "A merchant blends 2 varieties of tea costing ₹15/kg and ₹20/kg in ratio 2:3. He sells blend at ₹22/kg. Profit %?", options: ["20%", "22.2%", "25%", "28%"], answer: 1, hint: "CP = (2×15 + 3×20)/5 = 90/5 = ₹18/kg. SP = ₹22/kg. Profit% = (4/18)×100 = 22.22%." },
+            { cat: 'math', diff: 'hard', q: "The probability that A speaks truth is 4/5, B is 3/4. Probability they contradict each other?", options: ["1/2", "7/20", "3/5", "2/5"], answer: 1, hint: "P(Contradict) = P(A truth)P(B false) + P(A false)P(B truth) = (4/5×1/4) + (1/5×3/4) = 4/20 + 3/20 = 7/20." },
+            { cat: 'math', diff: 'hard', q: "Three numbers are in ratio 3:4:5 and their LCM is 2400. Their HCF is:", options: ["40", "80", "120", "200"], answer: 0, hint: "Let numbers be 3x, 4x, 5x. LCM = 60x = 2400 => x = 40. x is the HCF." },
+            { cat: 'math', diff: 'hard', q: "A boat covers 24km upstream and 36km downstream in 6 hours. Covers 36km up and 24km down in 6.5 hours. Current speed?", options: ["1 km/hr", "1.5 km/hr", "2 km/hr", "2.5 km/hr"], answer: 2, hint: "Let 1/up = u, 1/down = d. 24u + 36d = 6; 36u + 24d = 6.5. Solving gives Up=8, Down=12. Current = (12-8)/2 = 2 km/hr." },
+            { cat: 'math', diff: 'hard', q: "A regular hexagon is inscribed in a circle of radius 5 cm. What is the area of the hexagon?", options: ["37.5√3 cm²", "75√3 cm²", "50√3 cm²", "100 cm²"], answer: 0, hint: "A regular hexagon is 6 equilateral triangles. Side = Radius = 5. Area = 6 × (√3/4) × 5² = 37.5√3." },
+
+            // ================= GRAMMAR: EASY (20 Questions) =================
+            { cat: 'grammar', diff: 'easy', q: "Identify the error: “He go to office daily.”", options: ["He", "go to", "office", "daily"], answer: 1, hint: "Grammar Rule: Subject-Verb Agreement. Third-person singular subjects (He, She, It) require a singular verb ending in -s or -es (goes)." },
+            { cat: 'grammar', diff: 'easy', q: "Fill in the blank: 'I ___ a student.'", options: ["am", "is", "are", "be"], answer: 0, hint: "The pronoun 'I' always pairs with the 'to be' verb 'am' in the present tense." },
+            { cat: 'grammar', diff: 'easy', q: "Choose the correct spelling:", options: ["Definately", "Definetly", "Definitely", "Definitly"], answer: 2, hint: "Spelling Rule: Remember the root word 'finite'. De-finite-ly." },
+            { cat: 'grammar', diff: 'easy', q: "Choose the synonym for 'Happy'.", options: ["Sad", "Joyful", "Angry", "Tired"], answer: 1, hint: "Synonyms have similar meanings. 'Joyful' is a state of happiness." },
+            { cat: 'grammar', diff: 'easy', q: "Choose the antonym for 'Hot'.", options: ["Warm", "Boiling", "Cold", "Spicy"], answer: 2, hint: "Antonyms are opposites. The opposite of hot is cold." },
+            { cat: 'grammar', diff: 'easy', q: "Identify the article in the sentence: 'She bought an apple.'", options: ["She", "bought", "an", "apple"], answer: 2, hint: "Articles are 'a', 'an', and 'the'." },
+            { cat: 'grammar', diff: 'easy', q: "Fill in the blank: 'The cat is sitting ___ the mat.'", options: ["on", "in", "at", "underneath of"], answer: 0, hint: "Prepositions of place. 'On' indicates surface placement." },
+            { cat: 'grammar', diff: 'easy', q: "Which word is a noun?", options: ["Run", "Quickly", "Beautiful", "Table"], answer: 3, hint: "A noun is a person, place, thing, or idea. 'Table' is a thing." },
+            { cat: 'grammar', diff: 'easy', q: "Change to past tense: 'He walks to school.'", options: ["He walking to school.", "He walk to school.", "He walked to school.", "He will walk to school."], answer: 2, hint: "Regular past tense verbs end in '-ed'." },
+            { cat: 'grammar', diff: 'easy', q: "Identify the error: 'I doesn't like apples.'", options: ["I", "doesn't", "like", "apples"], answer: 1, hint: "Subject-verb agreement. The pronoun 'I' takes 'do not' (don't), not 'does not'." },
+            { cat: 'grammar', diff: 'easy', q: "Fill in the blank: 'She plays the piano very ___.'", options: ["good", "well", "nice", "beautiful"], answer: 1, hint: "Adverbs modify verbs. 'Well' is the adverb form of 'good'." },
+            { cat: 'grammar', diff: 'easy', q: "What is the plural of 'Child'?", options: ["Childs", "Childrens", "Children", "Childes"], answer: 2, hint: "Irregular plurals. The plural of child is children." },
+            { cat: 'grammar', diff: 'easy', q: "Choose the correct form: 'They ___ going to the park.'", options: ["am", "is", "are", "be"], answer: 2, hint: "Plural subject 'They' takes the plural verb 'are'." },
+            { cat: 'grammar', diff: 'easy', q: "Which sentence is punctuated correctly?", options: ["Its my birthday.", "It's my birthday.", "Its' my birthday.", "It is my, birthday."], answer: 1, hint: "'It's' is a contraction for 'It is'." },
+            { cat: 'grammar', diff: 'easy', q: "Choose the synonym for 'Fast'.", options: ["Slow", "Sluggish", "Quick", "Heavy"], answer: 2, hint: "Synonyms are similar. Fast = Quick." },
+            { cat: 'grammar', diff: 'easy', q: "Identify the pronoun: 'We love playing chess.'", options: ["We", "love", "playing", "chess"], answer: 0, hint: "Pronouns replace nouns (I, you, he, she, we, they)." },
+            { cat: 'grammar', diff: 'easy', q: "Fill in the blank: 'I have ___ brother.'", options: ["a", "an", "the", "some"], answer: 0, hint: "Use 'a' before consonant sounds." },
+            { cat: 'grammar', diff: 'easy', q: "What is the opposite of 'Begin'?", options: ["Start", "Commence", "Finish", "Open"], answer: 2, hint: "Antonym for starting is finishing." },
+            { cat: 'grammar', diff: 'easy', q: "Find the misspelled word:", options: ["Believe", "Recieve", "Achieve", "Relieve"], answer: 1, hint: "Rule: 'i' before 'e' except after 'c'. It should be 'Receive'." },
+            { cat: 'grammar', diff: 'easy', q: "Fill in the blank: 'She is looking ___ her lost keys.'", options: ["at", "for", "to", "in"], answer: 1, hint: "Phrasal verb: 'look for' means to search." },
+
+            // ================= GRAMMAR: MEDIUM (20 Questions) =================
+            { cat: 'grammar', diff: 'medium', q: "Identify the error: “One of the boy is missing from the class.”", options: ["One of the", "boy is", "missing from", "the class"], answer: 1, hint: "Grammar Rule: 'One of the...' must be followed by a plural noun (boys) and a singular verb (is)." },
+            { cat: 'grammar', diff: 'medium', q: "Identify the error: “I have been living in this city since five years.”", options: ["I have been", "living in this city", "since", "five years"], answer: 2, hint: "Grammar Rule: Use 'for' for a duration (for five years). Use 'since' for a starting point (since 2018)." },
+            { cat: 'grammar', diff: 'medium', q: "Identify the error: “She is more smarter than her elder brother.”", options: ["She is", "more smarter", "than her", "elder brother"], answer: 1, hint: "Grammar Rule: Double comparatives are incorrect. Remove 'more'." },
+            { cat: 'grammar', diff: 'medium', q: "Sentence Correction: 'Hardly had I left the house then it started raining.'", options: ["than it started", "when it started", "that it started", "No correction required"], answer: 1, hint: "Grammar Rule: 'Hardly' or 'Scarcely' is always followed by 'when'." },
+            { cat: 'grammar', diff: 'medium', q: "Sentence Correction: 'Despite of his hard work, he failed the exam.'", options: ["In spite his hard work", "Despite his hard work", "Although of his hard work", "No correction required"], answer: 1, hint: "Grammar Rule: 'Despite' is never followed by 'of'. (Use Despite or In spite of)." },
+            { cat: 'grammar', diff: 'medium', q: "Fill in the blank: 'She is very good ___ Mathematics.'", options: ["in", "with", "at", "about"], answer: 2, hint: "Grammar Rule: Collocation. The adjective 'good' (skills) takes the preposition 'at'." },
+            { cat: 'grammar', diff: 'medium', q: "Fill in the blank: 'He was accused ___ stealing the company\\'s data.'", options: ["for", "of", "with", "about"], answer: 1, hint: "Grammar Rule: Fixed Prepositions. 'Accused' is always followed by 'of'." },
+            { cat: 'grammar', diff: 'medium', q: "Fill in the blank: '___ you work hard, you will not pass the aptitude round.'", options: ["If", "Unless", "Until", "Although"], answer: 1, hint: "Grammar Rule: 'Unless' provides a negative condition necessary for the outcome (if not)." },
+            { cat: 'grammar', diff: 'medium', q: "Fill in the blank: 'The manager, along with his team members, ___ attending the conference.'", options: ["are", "is", "have", "were"], answer: 1, hint: "Grammar Rule: Phrases like 'along with' do not make a singular subject plural. Primary subject is singular." },
+            { cat: 'grammar', diff: 'medium', q: "Choose the correct synonym of “Rapid”", options: ["Sluggish", "Swift", "Tedious", "Leisurely"], answer: 1, hint: "Vocabulary Rule: 'Rapid' means moving with great speed. Swift is the closest match." },
+            { cat: 'grammar', diff: 'medium', q: "Choose the correct synonym of “Mitigate”", options: ["Aggravate", "Alleviate", "Intensify", "Provoke"], answer: 1, hint: "Vocabulary Rule: To 'mitigate' means to make less severe. 'Alleviate' is the closest match." },
+            { cat: 'grammar', diff: 'medium', q: "Choose the correct antonym of “Obscure”", options: ["Hidden", "Vague", "Obvious", "Confusing"], answer: 2, hint: "Vocabulary Rule: 'Obscure' means not clear. The opposite is 'Obvious'." },
+            { cat: 'grammar', diff: 'medium', q: "Choose the correct antonym of “Diligent”", options: ["Hardworking", "Assiduous", "Lazy", "Careful"], answer: 2, hint: "Vocabulary Rule: 'Diligent' means showing steady care. The opposite is 'Lazy'." },
+            { cat: 'grammar', diff: 'medium', q: "Choose the correct spelling:", options: ["Accomodation", "Accommodation", "Acommodation", "Acomodation"], answer: 1, hint: "Spelling Rule: Remember the double letters. Two C's and two M's." },
+            { cat: 'grammar', diff: 'medium', q: "Choose the correct spelling:", options: ["Embarassment", "Embarrasment", "Embarrassment", "Embaressment"], answer: 2, hint: "Spelling Rule: Remember the double letters. Two R's and two S's." },
+            { cat: 'grammar', diff: 'medium', q: "What is the meaning of the idiom: 'Bite the bullet'?", options: ["To physically injure oneself", "To face a difficult situation bravely", "To talk aggressively", "To avoid a problem"], answer: 1, hint: "Idiom Origin: Historically biting on a bullet during surgery without anesthesia." },
+            { cat: 'grammar', diff: 'medium', q: "What is the meaning of the idiom: 'Under the weather'?", options: ["Caught in the rain", "Feeling slightly ill", "Facing heavy criticism", "Being extremely happy"], answer: 1, hint: "Idiom Usage: An expression used when someone is not feeling their usual healthy self." },
+            { cat: 'grammar', diff: 'medium', q: "One word substitution: 'A person who knows and is able to use several languages.'", options: ["Introvert", "Polymath", "Polyglot", "Philanthropist"], answer: 2, hint: "Prefix 'Poly-' means many, and 'glot' refers to tongue/language." },
+            { passage: "Cloud computing has revolutionized data storage by allowing scalability.", cat: 'grammar', diff: 'medium', q: "What does cloud computing primarily allow?", options: ["Hardware sales", "Scalability", "Physical servers", "Data loss"], answer: 1, hint: "RC Rule: Direct restatement from the text." },
+            { cat: 'grammar', diff: 'medium', q: "Fill in the blank: 'I am looking forward to ___ you.'", options: ["meet", "meeting", "met", "have met"], answer: 1, hint: "Grammar Rule: 'Looking forward to' is followed by a gerund (-ing)." },
+
+            // ================= GRAMMAR: HARD (20 Questions) =================
+            { cat: 'grammar', diff: 'hard', q: "Rearrange:<br>P. The system processes data.<br>Q. Finally, it displays output.<br>R. First, user inputs parameters.<br>S. Then, it checks errors.", options: ["R, P, S, Q", "P, R, S, Q", "R, S, P, Q", "Q, S, P, R"], answer: 0, hint: "Logic Rule: Sequence markers (First -> Action -> Next step -> Finally)." },
+            { cat: 'grammar', diff: 'hard', q: "Rearrange:<br>P. Cloud revolutionized storage.<br>Q. Before this, servers were required.<br>R. Today, scaling is easy.<br>S. This made operations expensive.", options: ["P, R, Q, S", "P, Q, S, R", "Q, S, P, R", "R, P, Q, S"], answer: 1, hint: "Logic Rule: Chronological cause and effect. P(Topic)->Q(Past)->S(Past Consequence)->R(Present)." },
+            { cat: 'grammar', diff: 'hard', q: "Identify the error: 'Not only the students but also the teacher were present.'", options: ["Not only", "but also", "the teacher", "were present"], answer: 3, hint: "Grammar Rule: In 'not only... but also', the verb agrees with the subject closest to it (teacher -> was)." },
+            { cat: 'grammar', diff: 'hard', q: "Identify the error: 'Scarcely had the train left the station than it started to rain.'", options: ["Scarcely had", "the train left", "than it", "started to rain"], answer: 2, hint: "Grammar Rule: 'Scarcely' pairs with 'when', not 'than'." },
+            { cat: 'grammar', diff: 'hard', q: "Synonym of 'Ephemeral'", options: ["Permanent", "Transitory", "Eternal", "Solid"], answer: 1, hint: "Vocabulary: Ephemeral means lasting for a very short time." },
+            { cat: 'grammar', diff: 'hard', q: "Antonym of 'Cacophony'", options: ["Noise", "Harmony", "Discord", "Racket"], answer: 1, hint: "Vocabulary: Cacophony means a harsh discordant mixture of sounds." },
+            { cat: 'grammar', diff: 'hard', q: "Meaning of idiom: 'Burn the midnight oil'", options: ["To waste resources", "To work late into the night", "To start a fire", "To be destructive"], answer: 1, hint: "Idiom Usage: Refers to working or studying late, originally by the light of an oil lamp." },
+            { cat: 'grammar', diff: 'hard', q: "Sentence Correction: 'If I was the Prime Minister, I would change the policies.'", options: ["If I am", "If I were", "If I had been", "No correction"], answer: 1, hint: "Grammar Rule: Subjunctive mood for hypothetical situations uses 'were' for all subjects." },
+            { cat: 'grammar', diff: 'hard', q: "Sentence Correction: 'Each of the participants have received a certificate.'", options: ["has received", "are receiving", "were receiving", "No correction"], answer: 0, hint: "Grammar Rule: 'Each of' takes a singular verb." },
+            { cat: 'grammar', diff: 'hard', q: "Fill in the blank: 'The novel is so ___ that I couldn't put it down.'", options: ["monotonous", "compelling", "tedious", "bland"], answer: 1, hint: "Context Clues: 'Couldn't put it down' implies it was highly engaging (compelling)." },
+            { cat: 'grammar', diff: 'hard', q: "One word substitution: 'A remedy for all diseases.'", options: ["Antibiotic", "Panacea", "Elixir", "Antidote"], answer: 1, hint: "Vocabulary: 'Panacea' derives from the Greek goddess of universal remedy." },
+            { cat: 'grammar', diff: 'hard', q: "Choose the correct spelling:", options: ["Consensus", "Concensus", "Conscensus", "Consencus"], answer: 0, hint: "Spelling Rule: It comes from 'consent', ending in 'sensus'." },
+            { cat: 'grammar', diff: 'hard', q: "Fill in the blank: 'He is completely ___ to the suffering of others.'", options: ["immune", "callous", "ignorant", "unaware"], answer: 1, hint: "Collocation/Vocab: 'Callous' means showing an insensitive and cruel disregard for others." },
+            { passage: "Artificial Intelligence (AI) is transforming the IT industry by automating repetitive tasks, thereby allowing developers to focus on complex problem-solving. However, this shift requires professionals to constantly upskill. While AI handles code generation, human creativity is still paramount in system architecture.", cat: 'grammar', diff: 'hard', q: "According to the passage, what is the primary benefit of AI in the IT industry?", options: ["It replaces architects completely.", "It automates repetitive tasks.", "It prevents upskilling.", "It handles only complex problem-solving."], answer: 1, hint: "RC Rule: Direct restatement from the first sentence." },
+            { passage: "Artificial Intelligence (AI) is transforming the IT industry by automating repetitive tasks, thereby allowing developers to focus on complex problem-solving. However, this shift requires professionals to constantly upskill. While AI handles code generation, human creativity is still paramount in system architecture.", cat: 'grammar', diff: 'hard', q: "Based on the passage, what remains a strictly human domain?", options: ["Code generation", "Automating tasks", "Debugging", "System architecture and creativity"], answer: 3, hint: "RC Rule: Locate keywords. Final sentence states 'human creativity is paramount in system architecture'." },
+            { cat: 'grammar', diff: 'hard', q: "Identify the error: 'He is one of those people who is always complaining.'", options: ["He is", "one of those", "who is", "always complaining"], answer: 2, hint: "Grammar Rule: 'who' refers to 'people' (plural), so the verb should be plural ('are')." },
+            { cat: 'grammar', diff: 'hard', q: "Meaning of idiom: 'To play devil's advocate'", options: ["To do evil", "To argue against a cause just for the sake of argument", "To be a lawyer", "To anger someone intentionally"], answer: 1, hint: "Idiom Usage: Used to test the strength of an opposing argument." },
+            { cat: 'grammar', diff: 'hard', q: "Fill in the blank: 'The committee ___ divided on this issue.'", options: ["is", "are", "has", "have"], answer: 1, hint: "Grammar Rule: Collective nouns take a plural verb when members act individually (divided)." },
+            { cat: 'grammar', diff: 'hard', q: "Synonym of 'Sycophant'", options: ["Critic", "Flatterer", "Leader", "Rebel"], answer: 1, hint: "Vocabulary: A person who acts obsequiously toward someone important to gain advantage." },
+            { cat: 'grammar', diff: 'hard', q: "Antonym of 'Mellifluous'", options: ["Sweet", "Smooth", "Cacophonous", "Harmonious"], answer: 2, hint: "Vocabulary: Mellifluous means sweet-sounding. Cacophonous means harsh-sounding." }
+        ];
+
+        let activeQuizData = [];
+        let currentCategory = "";
+        let currentDifficulty = "";
+        let currentCategoryName = "";
+        let currentQuestion = 0;
+        let score = 0;
+        let answers = [];
+        let viewState = 'start'; 
+        let showHint = false;
+
+        // Utility: Fisher-Yates Shuffle
+        function shuffleArray(array) {
+            let curId = array.length;
+            while (0 !== curId) {
+                let randId = Math.floor(Math.random() * curId);
+                curId -= 1;
+                let tmp = array[curId];
+                array[curId] = array[randId];
+                array[randId] = tmp;
+            }
+            return array;
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+            
+            if (viewState === 'start') {
+                app.innerHTML = `
+                    <div class="bg-white p-6 md:p-10 lg:p-12 rounded-3xl shadow-xl text-center fade-in mx-auto w-full border border-slate-100">
+                        <div class="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 lg:mb-8 shadow-inner">
+                            <i class="fas fa-laptop-code text-2xl md:text-3xl lg:text-4xl"></i>
+                        </div>
+                        <h1 class="text-2xl md:text-4xl lg:text-5xl font-extrabold text-slate-800 mb-4 lg:mb-6 tracking-tight">IT Aptitude & Grammar Assessment</h1>
+                        <p class="text-slate-500 mb-8 md:mb-12 lg:mb-14 max-w-2xl mx-auto text-sm md:text-base lg:text-lg leading-relaxed">Prepare for your upcoming interview. Choose a module below to begin your focused practice session.</p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8 max-w-3xl mx-auto">
+                            <!-- Math Option -->
+                            <button onclick="selectCategory('math')" class="bg-slate-50 hover:bg-indigo-50 border-2 border-slate-100 hover:border-indigo-400 p-6 md:p-8 lg:p-10 rounded-2xl transition-all duration-300 group flex flex-col items-center text-center cursor-pointer shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-white text-indigo-600 rounded-full flex items-center justify-center mb-4 lg:mb-5 group-hover:scale-110 transition-transform duration-300 shadow-sm border border-indigo-50">
+                                    <i class="fas fa-calculator text-xl md:text-2xl lg:text-3xl"></i>
+                                </div>
+                                <div class="font-bold text-lg md:text-xl lg:text-2xl text-slate-800 mb-2 lg:mb-3 group-hover:text-indigo-900">Quantitative Math</div>
+                                <div class="text-slate-500 mb-6 text-xs md:text-sm lg:text-base leading-relaxed">Includes 60 Questions across 3 difficulty tiers on arithmetic, percentages, speed & distance.</div>
+                                <div class="text-indigo-600 font-semibold mt-auto flex items-center bg-white px-4 md:px-5 lg:px-6 py-2 md:py-2.5 lg:py-3 rounded-xl shadow-sm border border-indigo-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors text-sm md:text-base lg:text-base">Select Math <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i></div>
+                            </button>
+                            
+                            <!-- Grammar Option -->
+                            <button onclick="selectCategory('grammar')" class="bg-slate-50 hover:bg-emerald-50 border-2 border-slate-100 hover:border-emerald-400 p-6 md:p-8 lg:p-10 rounded-2xl transition-all duration-300 group flex flex-col items-center text-center cursor-pointer shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-white text-emerald-600 rounded-full flex items-center justify-center mb-4 lg:mb-5 group-hover:scale-110 transition-transform duration-300 shadow-sm border border-emerald-50">
+                                    <i class="fas fa-spell-check text-xl md:text-2xl lg:text-3xl"></i>
+                                </div>
+                                <div class="font-bold text-lg md:text-xl lg:text-2xl text-slate-800 mb-2 lg:mb-3 group-hover:text-emerald-900">Verbal & Grammar</div>
+                                <div class="text-slate-500 mb-6 text-xs md:text-sm lg:text-base leading-relaxed">Includes 60 Questions across 3 difficulty tiers on comprehension, error detection, and vocabulary.</div>
+                                <div class="text-emerald-600 font-semibold mt-auto flex items-center bg-white px-4 md:px-5 lg:px-6 py-2 md:py-2.5 lg:py-3 rounded-xl shadow-sm border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors text-sm md:text-base lg:text-base">Select Grammar <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i></div>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            else if (viewState === 'difficulty') {
+                const titleStr = currentCategory === 'math' ? 'Quantitative Math' : 'Verbal Ability';
+                const iconStr = currentCategory === 'math' ? 'fa-calculator text-indigo-500' : 'fa-spell-check text-emerald-500';
+                const colorTheme = currentCategory === 'math' ? 'indigo' : 'emerald';
+
+                app.innerHTML = `
+                    <div class="bg-white p-6 md:p-10 lg:p-12 rounded-3xl shadow-xl text-center fade-in mx-auto w-full border border-slate-100">
+                        <button onclick="viewState='start'; render()" class="text-sm font-medium text-slate-400 hover:text-slate-700 mb-6 lg:mb-8 flex items-center justify-center mx-auto transition-colors bg-slate-50 hover:bg-slate-100 px-4 py-2 rounded-full">
+                            <i class="fas fa-arrow-left mr-2"></i> Back to Subjects
+                        </button>
+
+                        <div class="mb-8 lg:mb-10">
+                            <i class="fas ${iconStr} text-3xl md:text-4xl lg:text-5xl mb-3 md:mb-4"></i>
+                            <h2 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-slate-800 mb-2 lg:mb-3">${titleStr}</h2>
+                            <p class="text-slate-500 text-sm md:text-base lg:text-lg">Select your difficulty level. Each tier contains a set of 20 questions.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 lg:gap-6 w-full max-w-3xl mx-auto">
+                            <!-- Easy -->
+                            <button onclick="startLevel('easy')" class="bg-slate-50 border-2 border-slate-100 hover:border-green-400 hover:bg-green-50 p-6 lg:p-8 rounded-2xl transition-all group flex flex-col items-center justify-center shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="w-12 h-12 lg:w-16 lg:h-16 bg-white text-green-500 rounded-full flex items-center justify-center mb-3 lg:mb-4 shadow-sm border border-green-100 group-hover:bg-green-500 group-hover:text-white transition-colors">
+                                    <i class="fas fa-seedling text-lg lg:text-2xl"></i>
+                                </div>
+                                <div class="font-bold text-lg lg:text-xl text-slate-800 group-hover:text-green-900">Easy</div>
+                                <div class="text-xs lg:text-sm text-slate-400 mt-1 lg:mt-2 font-medium bg-white px-2 py-1 rounded border border-slate-200">20 Questions</div>
+                            </button>
+                            
+                            <!-- Medium -->
+                            <button onclick="startLevel('medium')" class="bg-slate-50 border-2 border-slate-100 hover:border-amber-400 hover:bg-amber-50 p-6 lg:p-8 rounded-2xl transition-all group flex flex-col items-center justify-center shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="w-12 h-12 lg:w-16 lg:h-16 bg-white text-amber-500 rounded-full flex items-center justify-center mb-3 lg:mb-4 shadow-sm border border-amber-100 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                                    <i class="fas fa-balance-scale text-lg lg:text-2xl"></i>
+                                </div>
+                                <div class="font-bold text-lg lg:text-xl text-slate-800 group-hover:text-amber-900">Medium</div>
+                                <div class="text-xs lg:text-sm text-slate-400 mt-1 lg:mt-2 font-medium bg-white px-2 py-1 rounded border border-slate-200">20 Questions</div>
+                            </button>
+
+                            <!-- Hard -->
+                            <button onclick="startLevel('hard')" class="bg-slate-50 border-2 border-slate-100 hover:border-red-400 hover:bg-red-50 p-6 lg:p-8 rounded-2xl transition-all group flex flex-col items-center justify-center shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="w-12 h-12 lg:w-16 lg:h-16 bg-white text-red-500 rounded-full flex items-center justify-center mb-3 lg:mb-4 shadow-sm border border-red-100 group-hover:bg-red-500 group-hover:text-white transition-colors">
+                                    <i class="fas fa-fire text-lg lg:text-2xl"></i>
+                                </div>
+                                <div class="font-bold text-lg lg:text-xl text-slate-800 group-hover:text-red-900">Hard</div>
+                                <div class="text-xs lg:text-sm text-slate-400 mt-1 lg:mt-2 font-medium bg-white px-2 py-1 rounded border border-slate-200">20 Questions</div>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            else if (viewState === 'quiz') {
+                const q = activeQuizData[currentQuestion];
+                const progress = ((currentQuestion + 1) / activeQuizData.length) * 100;
+                const hasAnswered = answers[currentQuestion] !== null;
+
+                app.innerHTML = `
+                    <div class="bg-white p-5 sm:p-8 md:p-10 lg:p-12 rounded-3xl shadow-xl fade-in border border-slate-100 w-full mx-auto">
+                        <div class="mb-6 md:mb-8 lg:mb-10">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 lg:mb-5">
+                                <span class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-3 py-1.5 lg:py-2 rounded-lg border border-blue-200 shadow-sm flex items-center">
+                                    <i class="fas fa-layer-group mr-2 opacity-70"></i> ${currentCategoryName}
+                                </span>
+                                <span class="text-xs md:text-sm lg:text-base text-slate-500 font-bold bg-slate-100 px-3 py-1.5 lg:py-2 rounded-lg">
+                                    Question ${currentQuestion + 1} of ${activeQuizData.length}
+                                </span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2.5 md:h-3 lg:h-4 shadow-inner overflow-hidden">
+                                <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full transition-all duration-500 ease-out" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+
+                        ${q.passage ? `
+                            <div class="mb-6 lg:mb-8 p-4 md:p-5 lg:p-6 bg-slate-50 rounded-2xl border border-slate-200 text-slate-600 italic text-sm md:text-base lg:text-lg leading-relaxed shadow-sm">
+                                <div class="font-bold text-slate-800 not-italic mb-2 lg:mb-3 flex items-center"><i class="fas fa-book-open mr-2 text-blue-500"></i>Reading Comprehension Context:</div>
+                                "${q.passage}"
+                            </div>
+                        ` : ''}
+
+                        <h2 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-800 mb-6 md:mb-8 lg:mb-10 leading-snug">${currentQuestion + 1}. ${q.q}</h2>
+                        
+                        <div class="space-y-3 lg:space-y-4 mb-8">
+                            ${q.options.map((opt, i) => {
+                                const isSelected = answers[currentQuestion] === i;
+                                const isCorrect = q.answer === i;
+
+                                let btnClasses = "border-slate-200 hover:border-blue-300 hover:bg-slate-50 cursor-pointer shadow-sm";
+                                let textClasses = "text-slate-700";
+                                let circleClasses = "border-slate-300 group-hover:border-blue-400";
+                                let circleContent = "";
+
+                                if (hasAnswered) {
+                                    if (isCorrect) {
+                                        btnClasses = "border-green-500 bg-green-50 cursor-default shadow-md ring-1 ring-green-500";
+                                        textClasses = "text-green-800 font-bold";
+                                        circleClasses = "border-green-500 bg-green-500";
+                                        circleContent = '<i class="fas fa-check text-white text-xs"></i>';
+                                    } else if (isSelected) {
+                                        btnClasses = "border-red-500 bg-red-50 cursor-default shadow-md ring-1 ring-red-500";
+                                        textClasses = "text-red-800 font-bold";
+                                        circleClasses = "border-red-500 bg-red-500";
+                                        circleContent = '<i class="fas fa-times text-white text-xs"></i>';
+                                    } else {
+                                        btnClasses = "border-slate-200 opacity-60 cursor-default bg-slate-50";
+                                        textClasses = "text-slate-500";
+                                        circleClasses = "border-slate-300";
+                                    }
+                                }
+
+                                return `
+                                    <button ${hasAnswered ? 'disabled' : `onclick="selectAnswer(${i})"`}
+                                        class="w-full text-left p-4 sm:p-5 lg:p-6 rounded-2xl border-2 transition-all duration-200 flex items-center justify-between group ${btnClasses}">
+                                        <span class="${textClasses} text-sm sm:text-base lg:text-lg">${opt}</span>
+                                        <div class="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-colors ${circleClasses}">
+                                            ${circleContent}
+                                        </div>
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 lg:gap-5 pt-6 lg:pt-8 border-t border-slate-100">
+                            <button onclick="toggleHint()" class="text-slate-600 hover:text-amber-700 font-semibold text-sm lg:text-base transition-colors flex items-center justify-center bg-slate-100 hover:bg-amber-100 px-5 py-3 lg:py-4 rounded-xl border border-slate-200 hover:border-amber-300 shadow-sm w-full sm:w-auto">
+                                <i class="fas fa-lightbulb mr-2 text-amber-500 text-lg"></i> ${showHint ? 'Hide Hint / Formula' : 'Show Hint / Formula'}
+                            </button>
+
+                            <div class="flex gap-3 w-full sm:w-auto">
+                                <button onclick="prevQuestion()" class="flex-1 sm:flex-none px-5 py-3 lg:py-4 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 shadow-sm transition-colors ${currentQuestion === 0 ? 'opacity-50 cursor-not-allowed' : ''}" ${currentQuestion === 0 ? 'disabled' : ''}>Back</button>
+                                <button onclick="nextQuestion()" class="flex-1 sm:flex-none px-6 py-3 lg:py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center text-sm lg:text-base" ${!hasAnswered ? 'disabled' : ''}>
+                                    ${currentQuestion === activeQuizData.length - 1 ? 'Finish Set <i class="fas fa-flag-checkered ml-2"></i>' : 'Next <i class="fas fa-arrow-right ml-2"></i>'}
+                                </button>
+                            </div>
+                        </div>
+
+                        ${showHint ? `
+                        <div class="mt-6 lg:mt-8 p-4 sm:p-5 lg:p-6 bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200 text-amber-900 rounded-2xl text-sm sm:text-base lg:text-lg fade-in shadow-inner leading-relaxed">
+                            <div class="font-bold flex items-center mb-1 lg:mb-2 text-amber-800"><i class="fas fa-magic mr-2"></i> Learning Rule:</div>
+                            ${q.hint}
+                        </div>` : ''}
+                    </div>
+                `;
+            } 
+            else if (viewState === 'results') {
+                score = answers.reduce((acc, val, idx) => acc + (val === activeQuizData[idx].answer ? 1 : 0), 0);
+                const percentage = Math.round((score / activeQuizData.length) * 100);
+                
+                let feedback = "";
+                let themeColor = "blue";
+                let icon = "fa-chart-line";
+                
+                if (percentage >= 90) { feedback = "Outstanding! You dominated this difficulty level."; themeColor = "green"; icon = "fa-trophy"; }
+                else if (percentage >= 70) { feedback = "Great job! A solid score. Review mistakes to perfect skills."; themeColor = "blue"; icon = "fa-star"; }
+                else if (percentage >= 50) { feedback = "Good effort! You've got the basics, but practice makes perfect."; themeColor = "amber"; icon = "fa-thumbs-up"; }
+                else { feedback = "Keep practicing! Review the formulas/rules in the detailed breakdown below."; themeColor = "red"; icon = "fa-book-reader"; }
+
+                app.innerHTML = `
+                    <div class="bg-white p-6 sm:p-8 md:p-10 lg:p-12 rounded-3xl shadow-xl fade-in mx-auto w-full border border-slate-100">
+                        <div class="text-center mb-8 lg:mb-10 pb-8 lg:pb-10 border-b border-slate-100">
+                            <div class="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 mx-auto rounded-full flex items-center justify-center mb-5 lg:mb-6 bg-${themeColor}-100 text-${themeColor}-500 shadow-inner">
+                                <i class="fas ${icon} text-3xl sm:text-4xl lg:text-5xl"></i>
+                            </div>
+                            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-800 mb-2 lg:mb-3">Set Completed!</h2>
+                            <p class="text-slate-500 mb-6 lg:mb-8 text-sm sm:text-base lg:text-lg max-w-xl mx-auto">${feedback}</p>
+
+                            <div class="inline-block bg-slate-50 px-8 lg:px-10 py-6 lg:py-8 rounded-3xl border border-slate-100 shadow-sm mb-8 lg:mb-10">
+                                <div class="text-4xl sm:text-5xl lg:text-6xl font-black text-${themeColor}-600 tracking-tighter mb-2 lg:mb-3">${percentage}%</div>
+                                <div class="text-sm sm:text-base lg:text-lg text-slate-600 font-semibold uppercase tracking-widest">${score} out of ${activeQuizData.length} Correct</div>
+                                <div class="mt-3 lg:mt-4 inline-block bg-white border border-slate-200 text-slate-500 text-xs lg:text-sm font-bold px-3 lg:px-4 py-1.5 lg:py-2 rounded-full shadow-sm">
+                                    <i class="fas fa-layer-group text-${themeColor}-500 mr-1"></i> ${currentCategoryName}
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4 w-full max-w-3xl mx-auto">
+                                <button onclick="startLevel(currentDifficulty)" class="px-4 py-3 sm:py-4 lg:py-5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-md transition-all flex flex-col items-center justify-center text-sm lg:text-base group">
+                                    <i class="fas fa-redo mb-1 lg:mb-2 group-hover:-rotate-90 transition-transform"></i> Retry Level
+                                </button>
+                                <button onclick="viewState='difficulty'; render()" class="px-4 py-3 sm:py-4 lg:py-5 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-900 shadow-md transition-all flex flex-col items-center justify-center text-sm lg:text-base">
+                                    <i class="fas fa-layer-group mb-1 lg:mb-2"></i> Change Level
+                                </button>
+                                <button onclick="restartQuiz()" class="px-4 py-3 sm:py-4 lg:py-5 bg-slate-100 text-slate-700 border border-slate-300 rounded-xl font-bold hover:bg-slate-200 shadow-sm transition-all flex flex-col items-center justify-center text-sm lg:text-base">
+                                    <i class="fas fa-exchange-alt mb-1 lg:mb-2"></i> Change Subject
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 mb-6 lg:mb-8 flex items-center"><i class="fas fa-clipboard-list mr-3 text-blue-500"></i>Question Review</h3>
+                            <div class="space-y-6 lg:space-y-8">
+                                ${activeQuizData.map((q, i) => `
+                                    <div class="p-5 sm:p-6 lg:p-8 rounded-2xl border-2 ${answers[i] === q.answer ? 'bg-white border-green-200 shadow-sm' : 'bg-red-50/30 border-red-200'}">
+                                        <div class="flex items-start mb-4 lg:mb-5">
+                                            <div class="mr-3 sm:mr-4 lg:mr-5 mt-0.5 flex-shrink-0">
+                                                ${answers[i] === q.answer ?
+                                                    '<div class="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-green-500 flex items-center justify-center text-white text-xs sm:text-sm shadow-sm"><i class="fas fa-check"></i></div>' :
+                                                    '<div class="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-red-500 flex items-center justify-center text-white text-xs sm:text-sm shadow-sm"><i class="fas fa-times"></i></div>'
+                                                }
+                                            </div>
+                                            <div class="flex-1">
+                                                <span class="text-[10px] sm:text-xs lg:text-sm font-black uppercase tracking-widest ${answers[i] === q.answer ? 'text-green-600' : 'text-red-600'} block mb-1 lg:mb-2">Question ${i+1}</span>
+                                                <p class="font-bold text-slate-800 text-sm sm:text-base lg:text-lg leading-snug">${q.q}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mt-4 lg:mt-5 ml-9 sm:ml-12 lg:ml-16">
+                                            ${q.options.map((opt, optIdx) => `
+                                                <div class="p-2.5 sm:p-3 lg:p-4 rounded-xl border ${
+                                                    optIdx === q.answer ? 'bg-green-100 border-green-300 text-green-900 font-bold ring-1 ring-green-400' :
+                                                    optIdx === answers[i] ? 'bg-red-100 border-red-300 text-red-900 font-semibold' : 'bg-white border-slate-200 text-slate-500'
+                                                } flex justify-between items-center text-xs sm:text-sm lg:text-base">
+                                                    <span>${opt}</span>
+                                                    ${optIdx === q.answer ? '<i class="fas fa-check-circle text-green-600"></i>' : (optIdx === answers[i] ? '<i class="fas fa-times-circle text-red-600"></i>' : '')}
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                        <div class="mt-4 lg:mt-5 ml-9 sm:ml-12 lg:ml-16 text-xs sm:text-sm lg:text-base text-blue-900 bg-blue-50 p-3 sm:p-4 lg:p-5 rounded-xl border border-blue-200 shadow-inner">
+                                            <strong class="flex items-center mb-1 lg:mb-2 text-blue-800"><i class="fas fa-graduation-cap mr-2"></i> Rule to Remember:</strong>
+                                            ${q.hint}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="mt-8 lg:mt-10 text-center">
+                             <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-sm lg:text-base font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-6 lg:px-8 py-2.5 lg:py-3 rounded-full transition-colors inline-flex items-center">
+                                <i class="fas fa-arrow-up mr-2"></i> Back to Top
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Logic Controls
+        function selectCategory(category) {
+            currentCategory = category;
+            viewState = 'difficulty';
+            render();
+            window.scrollTo(0, 0);
+        }
+
+        function startLevel(difficulty) {
+            currentDifficulty = difficulty;
+            
+            // Filter database for requested category and difficulty
+            let filteredQuestions = allQuizData.filter(q => q.cat === currentCategory && q.diff === difficulty);
+            
+            // Deep copy and shuffle the array to give a fresh 20-question set order
+            activeQuizData = shuffleArray([...filteredQuestions]);
+            
+            // Set dynamic title text
+            const catName = currentCategory === 'math' ? 'Quant Math' : 'Verbal Grammar';
+            const diffName = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+            currentCategoryName = `${catName} - ${diffName} Level`;
+            
+            viewState = 'quiz'; 
+            currentQuestion = 0; 
+            answers = new Array(activeQuizData.length).fill(null); 
+            showHint = false; 
+            render(); 
+            window.scrollTo(0, 0);
+        }
+
+        function selectAnswer(idx) { 
+            if (answers[currentQuestion] === null) {
+                answers[currentQuestion] = idx; 
+                showHint = true; // Auto-reveal hint/rule upon answering
+                render(); 
+            }
+        }
+
+        function prevQuestion() { 
+            if(currentQuestion > 0) { 
+                currentQuestion--; 
+                showHint = answers[currentQuestion] !== null; 
+                render(); 
+                window.scrollTo(0, 0);
+            } 
+        }
+
+        function nextQuestion() {
+            if(currentQuestion < activeQuizData.length - 1) {
+                currentQuestion++; 
+                showHint = answers[currentQuestion] !== null; 
+                render();
+                window.scrollTo(0, 0);
+            } else {
+                viewState = 'results'; 
+                render();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function toggleHint() { 
+            showHint = !showHint; 
+            render(); 
+        }
+
+        function restartQuiz() { 
+            currentCategory = "";
+            currentDifficulty = "";
+            viewState = 'start';
+            render(); 
+            window.scrollTo(0, 0); 
+        }
+
+        // Init App
+        window.onload = render;
+    </script>
+</body>
+</html>
