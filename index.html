@@ -19,14 +19,14 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex items-center justify-center p-4 md:p-6 lg:p-8 2xl:p-10">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex items-center justify-center p-4 md:p-6 lg:p-8">
 
-    <div id="app" class="w-full max-w-4xl 2xl:max-w-5xl transition-all duration-300">
+    <div id="app" class="w-full max-w-4xl transition-all duration-300">
         <!-- Content gets injected here by JavaScript -->
     </div>
 
     <script>
-        // Database of 120 Questions (60 Math, 60 Grammar split into 20 Easy, 20 Medium, 20 Hard)
+        // Database of 200 Questions (100 Math, 100 Grammar split into 20 Easy, 20 Medium, 20 Hard, 40 Extreme)
         const allQuizData = [
             // ================= MATH: EASY (20 Questions) =================
             { cat: 'math', diff: 'easy', q: "A product costs ₹500 and is sold at 20% profit. What is the selling price?", options: ["₹550", "₹600", "₹620", "₹580"], answer: 1, hint: "Formula: Selling Price (SP) = Cost Price (CP) + (Profit % × CP)." },
@@ -94,6 +94,48 @@
             { cat: 'math', diff: 'hard', q: "A boat covers 24km upstream and 36km downstream in 6 hours. Covers 36km up and 24km down in 6.5 hours. Current speed?", options: ["1 km/hr", "1.5 km/hr", "2 km/hr", "2.5 km/hr"], answer: 2, hint: "Let 1/up = u, 1/down = d. 24u + 36d = 6; 36u + 24d = 6.5. Solving gives Up=8, Down=12. Current = (12-8)/2 = 2 km/hr." },
             { cat: 'math', diff: 'hard', q: "A regular hexagon is inscribed in a circle of radius 5 cm. What is the area of the hexagon?", options: ["37.5√3 cm²", "75√3 cm²", "50√3 cm²", "100 cm²"], answer: 0, hint: "A regular hexagon is 6 equilateral triangles. Side = Radius = 5. Area = 6 × (√3/4) × 5² = 37.5√3." },
 
+            // ================= MATH: EXTREME (40 Questions) =================
+            { cat: 'math', diff: 'extreme', q: "A watch gains 5 seconds in 3 minutes and was set right at 8 AM. What time will it show at 10 PM on the same day?", options: ["10:23:20 PM", "10:14:00 PM", "10:25:00 PM", "10:15:20 PM"], answer: 0, hint: "14 hours = 840 mins. Gains 5s per 3 mins = (840/3)*5 = 1400s = 23 mins 20 secs. Time is 10:23:20 PM." },
+            { cat: 'math', diff: 'extreme', q: "What is the probability that a leap year selected at random will contain 53 Sundays?", options: ["1/7", "2/7", "3/7", "5/14"], answer: 1, hint: "A leap year has 366 days = 52 weeks + 2 days. The 2 extra days can be (Sun,Mon), (Sat,Sun), etc. Total 7 pairs, 2 contain Sunday." },
+            { cat: 'math', diff: 'extreme', q: "A can do a piece of work in 10 days, B in 15 days. They work for 5 days. The rest of the work was finished by C in 2 days. If they get ₹1500 for the whole work, what is C's share?", options: ["₹250", "₹300", "₹500", "₹450"], answer: 0, hint: "A's 5 days = 5/10=1/2. B's 5 days = 5/15=1/3. Total = 5/6. C did 1/6 of work, so C gets 1/6 of ₹1500 = ₹250." },
+            { cat: 'math', diff: 'extreme', q: "Two pipes can fill a cistern in 14 hours and 16 hours. The pipes are opened simultaneously and it is found that due to leakage in the bottom it took 32 minutes more to fill. When the cistern is full, in what time will the leak empty it?", options: ["112 hours", "114.5 hours", "116.8 hours", "120 hours"], answer: 0, hint: "Work without leak = (14*16)/(30) = 112/15 hrs = 7 hrs 28 min. With leak = 8 hrs. Net work = 1/14 + 1/16 - 1/L = 1/8. Solving L = 112 hrs." },
+            { cat: 'math', diff: 'extreme', q: "Find the remainder when 2^256 is divided by 17.", options: ["1", "2", "15", "16"], answer: 0, hint: "Fermat's Little Theorem: a^(p-1) mod p = 1. Here p=17. 2^16 mod 17 = 1. 256 is a multiple of 16 (16*16). So remainder is 1." },
+            { cat: 'math', diff: 'extreme', q: "A sphere of radius 3 cm is dropped into a cylindrical vessel of radius 4 cm containing water. The rise in water level is:", options: ["4/9 cm", "9/4 cm", "9/16 cm", "3/4 cm"], answer: 1, hint: "Volume of sphere = Volume of displaced cylinder. (4/3)π(3^3) = π(4^2)h => 36 = 16h => h = 36/16 = 9/4 cm." },
+            { cat: 'math', diff: 'extreme', q: "In a 100m race, A beats B by 10m and C by 13m. In a race of 180m, B will beat C by:", options: ["6m", "8m", "10m", "12m"], answer: 0, hint: "When A runs 100m, B runs 90m, C runs 87m. Ratio of B:C is 90:87. For 180m for B, C will run (87/90)*180 = 174m. B beats C by 6m." },
+            { cat: 'math', diff: 'extreme', q: "A man can row 6 km/h in still water. It takes him twice as long to row up as to row down the river. Rate of stream?", options: ["1.5 km/h", "2 km/h", "2.5 km/h", "3 km/h"], answer: 1, hint: "Distance is same. (6-v)*2t = (6+v)*t => 12 - 2v = 6 + v => 3v = 6 => v = 2 km/h." },
+            { cat: 'math', diff: 'extreme', q: "What is the angle between the hands of a clock at 3:40?", options: ["120°", "125°", "130°", "140°"], answer: 2, hint: "Angle = |30H - 5.5M|. Angle = |30(3) - 5.5(40)| = |90 - 220| = 130°." },
+            { cat: 'math', diff: 'extreme', q: "If log 2 = 0.3010 and log 3 = 0.4771, find the value of log 512.", options: ["2.709", "2.812", "2.903", "3.010"], answer: 0, hint: "512 = 2^9. log(512) = 9*log(2) = 9 * 0.3010 = 2.709." },
+            { cat: 'math', diff: 'extreme', q: "What is the number of zeroes at the end of 100! ?", options: ["21", "22", "23", "24"], answer: 3, hint: "Zeroes depend on pairs of 5s and 2s. Number of 5s = [100/5] + [100/25] = 20 + 4 = 24." },
+            { cat: 'math', diff: 'extreme', q: "A, B and C can do a work in 20, 30 and 60 days. A works all days. B and C help A on every third day. How many days to finish?", options: ["12", "15", "18", "21"], answer: 1, hint: "A's work in 3 days = 3/20. B+C work in 1 day = 1/30 + 1/60 = 1/20. Work in 3 days = 4/20 = 1/5. Total days = 5*3 = 15." },
+            { cat: 'math', diff: 'extreme', q: "A merchant decides to sell his goods at 10% loss but uses a false weight of 800g instead of 1kg. Net profit/loss %?", options: ["10% Profit", "12.5% Profit", "15% Profit", "12.5% Loss"], answer: 1, hint: "Selling 800g (worth ₹80) for ₹90 (10% loss on 1kg=₹100). Profit = ₹10 on cost of ₹80. 10/80 = 12.5% profit." },
+            { cat: 'math', diff: 'extreme', q: "Find the sum of all 3 digit numbers divisible by 5.", options: ["98550", "98100", "98950", "99000"], answer: 0, hint: "AP: 100, 105... 995. Total terms (n) = (995-100)/5 + 1 = 180. Sum = (180/2)*(100 + 995) = 90 * 1095 = 98550." },
+            { cat: 'math', diff: 'extreme', q: "If the difference between CI and SI on a sum for 3 years at 10% per annum is ₹31, find the sum.", options: ["₹1,000", "₹1,200", "₹1,500", "₹2,000"], answer: 0, hint: "Diff = P(R/100)²(3 + R/100). 31 = P(1/10)²(3 + 1/10) => 31 = P(1/100)(31/10) => P = 1000." },
+            { cat: 'math', diff: 'extreme', q: "From a pack of 52 cards, 2 cards are drawn together. Probability both are kings?", options: ["1/221", "2/221", "3/221", "4/221"], answer: 0, hint: "C(4,2) / C(52,2) = 6 / 1326 = 1 / 221." },
+            { cat: 'math', diff: 'extreme', q: "The roots of the equation x² - 5x + 6 = 0 are:", options: ["2, -3", "-2, 3", "2, 3", "-2, -3"], answer: 2, hint: "Factorizing gives (x-2)(x-3)=0. Roots are 2 and 3." },
+            { cat: 'math', diff: 'extreme', q: "Two poles of height 6m and 11m stand on plane ground. If distance between their feet is 12m, distance between tops?", options: ["13m", "14m", "15m", "16m"], answer: 0, hint: "Right triangle formed: base = 12, height difference = 11 - 6 = 5. Hypotenuse = √(12² + 5²) = 13." },
+            { cat: 'math', diff: 'extreme', q: "What is the HCF of 2/3, 4/5, and 6/7?", options: ["2/105", "12/105", "2/35", "12/35"], answer: 0, hint: "HCF of fractions = HCF of numerators / LCM of denominators. HCF(2,4,6) = 2. LCM(3,5,7) = 105. Result: 2/105." },
+            { cat: 'math', diff: 'extreme', q: "A solution of 10% acid is mixed with a solution of 30% acid to get 50 liters of 22% acid. How much of 10% acid was used?", options: ["15L", "20L", "25L", "30L"], answer: 1, hint: "Alligation: Ratio = (30-22):(22-10) = 8:12 = 2:3. Amount of 10% = (2/5) * 50 = 20 liters." },
+            { cat: 'math', diff: 'extreme', q: "If a^x = b, b^y = c, and c^z = a, then the value of xyz is:", options: ["0", "1", "abc", "a+b+c"], answer: 1, hint: "Take log: x = log_a(b), y = log_b(c), z = log_c(a). xyz = log_a(b)*log_b(c)*log_c(a) = log_a(a) = 1." },
+            { cat: 'math', diff: 'extreme', q: "Find the total number of factors of 120.", options: ["12", "14", "16", "18"], answer: 2, hint: "120 = 2³ × 3¹ × 5¹. Number of factors = (3+1)(1+1)(1+1) = 4 × 2 × 2 = 16." },
+            { cat: 'math', diff: 'extreme', q: "If A+B = 90°, what is the maximum value of sin(A)sin(B)?", options: ["1/2", "1", "√3/2", "1/4"], answer: 0, hint: "sin(A)sin(90-A) = sin(A)cos(A) = 0.5 * sin(2A). Max value occurs when 2A=90 (A=45). 0.5 * sin(90) = 1/2." },
+            { cat: 'math', diff: 'extreme', q: "A train starts with the speed of 70 km/h with its speed increasing every 2 hours by 10 km/h. Hours to cover 345 km?", options: ["3", "3.5", "4", "4.5"], answer: 3, hint: "1st 2 hrs: 140km. Next 2 hrs (at 80km/h): 160km. Total 4 hrs = 300km. Remaining 45km at 90km/h takes 0.5 hrs. Total 4.5 hrs." },
+            { cat: 'math', diff: 'extreme', q: "There are 5 letters and 5 addressed envelopes. Probability that exactly 1 letter is put in a wrong envelope?", options: ["0", "1/5", "1/120", "1/24"], answer: 0, hint: "It is impossible for exactly ONE letter to be in the wrong envelope. If one is wrong, its proper spot is taken, forcing at least one more to be wrong." },
+            { cat: 'math', diff: 'extreme', q: "A circular track has a length of 600m. A and B start in opposite directions at 15 m/s and 10 m/s. When will they first meet?", options: ["20s", "24s", "30s", "40s"], answer: 1, hint: "Relative speed = 15 + 10 = 25 m/s. Time to meet = Distance / Rel Speed = 600 / 25 = 24 seconds." },
+            { cat: 'math', diff: 'extreme', q: "Evaluate: (1 - 1/3)(1 - 1/4)(1 - 1/5)...(1 - 1/n)", options: ["1/n", "2/n", "2/(n-1)", "n/2"], answer: 1, hint: "Series expands to: (2/3) * (3/4) * (4/5) * ... * (n-1)/n. All intermediate terms cancel out, leaving 2/n." },
+            { cat: 'math', diff: 'extreme', q: "The ratio of the volume of a cube to that of a sphere which exactly fits inside the cube is:", options: ["6:π", "π:6", "4:π", "8:π"], answer: 0, hint: "Let sphere radius=r, so cube side=2r. Cube Vol=(2r)³=8r³. Sphere Vol=(4/3)πr³. Ratio = 8r³ : (4/3)πr³ = 24:4π = 6:π." },
+            { cat: 'math', diff: 'extreme', q: "The angle of elevation of a ladder leaning against a wall is 60°. Foot of ladder is 4.6m away. Length of ladder?", options: ["2.3m", "4.6m", "9.2m", "10m"], answer: 2, hint: "cos(60°) = Base / Hypotenuse => 1/2 = 4.6 / Length => Length = 4.6 * 2 = 9.2m." },
+            { cat: 'math', diff: 'extreme', q: "How many 3-digit numbers can be formed using 1,2,3,4,5 if repetition is not allowed?", options: ["60", "120", "25", "125"], answer: 0, hint: "Permutations: 5 choices for 1st, 4 for 2nd, 3 for 3rd. 5 * 4 * 3 = 60." },
+            { cat: 'math', diff: 'extreme', q: "In a group of 50 students, 30 like Tea, 25 like Coffee, 10 like neither. How many like both?", options: ["10", "12", "15", "5"], answer: 2, hint: "Total liking at least one = 50 - 10 = 40. n(T U C) = n(T) + n(C) - n(T ∩ C) => 40 = 30 + 25 - Both => Both = 55 - 40 = 15." },
+            { cat: 'math', diff: 'extreme', q: "The L.C.M. of two numbers is 48. The numbers are in ratio 2:3. The sum of the numbers is:", options: ["28", "32", "40", "64"], answer: 2, hint: "Numbers are 2x and 3x. LCM = 6x = 48 => x = 8. Numbers are 16 and 24. Sum = 40." },
+            { cat: 'math', diff: 'extreme', q: "If selling price is doubled, the profit triples. Find the profit percentage.", options: ["66.6%", "100%", "105.3%", "120%"], answer: 1, hint: "Original profit P = SP - CP. New profit 3P = 2SP - CP. Substituting: 3(SP - CP) = 2SP - CP => 3SP - 3CP = 2SP - CP => SP = 2CP. Profit = CP, so 100%." },
+            { cat: 'math', diff: 'extreme', q: "A polygon has 54 diagonals. The number of sides in the polygon is:", options: ["10", "11", "12", "13"], answer: 2, hint: "Formula: n(n-3)/2 = 54 => n² - 3n - 108 = 0. Solving: (n-12)(n+9) = 0 => n = 12." },
+            { cat: 'math', diff: 'extreme', q: "In what ratio must water be mixed with milk costing ₹12 per liter to obtain a mixture worth ₹8 per liter?", options: ["1:2", "2:1", "2:3", "3:2"], answer: 0, hint: "Alligation: Water (0) and Milk (12) mixed for (8). Ratio of W:M = (12-8):(8-0) = 4:8 = 1:2." },
+            { cat: 'math', diff: 'extreme', q: "Evaluate log_2 (log_2 (log_3 81))", options: ["0", "1", "2", "3"], answer: 1, hint: "log_3(81) = 4. log_2(4) = 2. log_2(2) = 1." },
+            { cat: 'math', diff: 'extreme', q: "A can contains a mixture of two liquids A and B in ratio 7:5. When 9 liters are drawn and replaced by B, ratio is 7:9. Initial liquid A?", options: ["10L", "20L", "21L", "25L"], answer: 2, hint: "Let initial A=7x, B=5x. After 9L drawn: A = 7x - (7/12)9. Ratio = (7x - 21/4) / (5x - 15/4 + 9) = 7/9. Solving gives x=3. Initial A = 21." },
+            { cat: 'math', diff: 'extreme', q: "What day of the week was 15th August 1947?", options: ["Thursday", "Friday", "Saturday", "Sunday"], answer: 1, hint: "Calendar logic: 1946 years = 1 odd day. Jan to Aug 15 = 227 days = 3 odd days. 1+3 = 4 odd days (Friday)." },
+            { cat: 'math', diff: 'extreme', q: "If 3^(x-y) = 27 and 3^(x+y) = 243, then x is equal to:", options: ["0", "2", "4", "6"], answer: 2, hint: "3^(x-y) = 3^3 => x-y = 3. 3^(x+y) = 3^5 => x+y = 5. Adding: 2x = 8 => x = 4." },
+            { cat: 'math', diff: 'extreme', q: "The sum of ages of 5 children born at intervals of 3 years each is 50 years. Age of the youngest?", options: ["4", "5", "8", "10"], answer: 0, hint: "x + (x+3) + (x+6) + (x+9) + (x+12) = 50 => 5x + 30 = 50 => 5x = 20 => x = 4." },
+
             // ================= GRAMMAR: EASY (20 Questions) =================
             { cat: 'grammar', diff: 'easy', q: "Identify the error: “He go to office daily.”", options: ["He", "go to", "office", "daily"], answer: 1, hint: "Grammar Rule: Subject-Verb Agreement. Third-person singular subjects (He, She, It) require a singular verb ending in -s or -es (goes)." },
             { cat: 'grammar', diff: 'easy', q: "Fill in the blank: 'I ___ a student.'", options: ["am", "is", "are", "be"], answer: 0, hint: "The pronoun 'I' always pairs with the 'to be' verb 'am' in the present tense." },
@@ -158,7 +200,49 @@
             { cat: 'grammar', diff: 'hard', q: "Meaning of idiom: 'To play devil's advocate'", options: ["To do evil", "To argue against a cause just for the sake of argument", "To be a lawyer", "To anger someone intentionally"], answer: 1, hint: "Idiom Usage: Used to test the strength of an opposing argument." },
             { cat: 'grammar', diff: 'hard', q: "Fill in the blank: 'The committee ___ divided on this issue.'", options: ["is", "are", "has", "have"], answer: 1, hint: "Grammar Rule: Collective nouns take a plural verb when members act individually (divided)." },
             { cat: 'grammar', diff: 'hard', q: "Synonym of 'Sycophant'", options: ["Critic", "Flatterer", "Leader", "Rebel"], answer: 1, hint: "Vocabulary: A person who acts obsequiously toward someone important to gain advantage." },
-            { cat: 'grammar', diff: 'hard', q: "Antonym of 'Mellifluous'", options: ["Sweet", "Smooth", "Cacophonous", "Harmonious"], answer: 2, hint: "Vocabulary: Mellifluous means sweet-sounding. Cacophonous means harsh-sounding." }
+            { cat: 'grammar', diff: 'hard', q: "Antonym of 'Mellifluous'", options: ["Sweet", "Smooth", "Cacophonous", "Harmonious"], answer: 2, hint: "Vocabulary: Mellifluous means sweet-sounding. Cacophonous means harsh-sounding." },
+
+            // ================= GRAMMAR: EXTREME (40 Questions) =================
+            { cat: 'grammar', diff: 'extreme', q: "Choose the synonym for 'Perspicacious'.", options: ["Dull", "Astute", "Ambiguous", "Lethargic"], answer: 1, hint: "Vocabulary: Having a ready insight into and understanding of things (astute)." },
+            { cat: 'grammar', diff: 'extreme', q: "Choose the antonym for 'Obfuscate'.", options: ["Clarify", "Confuse", "Obscure", "Complicate"], answer: 0, hint: "Vocabulary: 'Obfuscate' means to make unclear or unintelligible. The opposite is clarify." },
+            { cat: 'grammar', diff: 'extreme', q: "Identify the error: 'No sooner had she finished the project when her boss gave her another one.'", options: ["No sooner had", "finished the project", "when her boss", "another one"], answer: 2, hint: "Grammar Rule: 'No sooner' is always paired with 'than', not 'when'." },
+            { cat: 'grammar', diff: 'extreme', q: "Sentence Correction: 'Between you and I, this plan is destined to fail.'", options: ["Between you and me", "Between I and you", "Among you and I", "No correction"], answer: 0, hint: "Grammar Rule: 'Between' is a preposition, so the pronouns following it must be in the objective case (me, not I)." },
+            { cat: 'grammar', diff: 'extreme', q: "Meaning of idiom: 'A Pyrrhic victory'", options: ["A victory won by a large margin", "A victory that inflicts such a devastating toll that it is tantamount to defeat", "A victory won through cheating", "A bloodless victory"], answer: 1, hint: "Idiom Usage: Derived from King Pyrrhus, whose victories caused heavy losses." },
+            { cat: 'grammar', diff: 'extreme', q: "Fill in the blank: 'The new regulations will ___ the process of applying for a visa.'", options: ["expedite", "extricate", "exonerate", "exacerbate"], answer: 0, hint: "Vocabulary: 'Expedite' means to make an action happen sooner or be accomplished more quickly." },
+            { cat: 'grammar', diff: 'extreme', q: "What is the meaning of the foreign phrase 'Quid pro quo'?", options: ["Something for nothing", "A favor for a favor", "To the bitter end", "Seize the day"], answer: 1, hint: "Latin: Literally means 'something for something'." },
+            { cat: 'grammar', diff: 'extreme', q: "Identify the error: 'The jury have reached a unanimous verdict.'", options: ["The jury", "have reached", "a unanimous", "verdict"], answer: 1, hint: "Grammar Rule: When a collective noun acts as a single unit ('unanimous'), it takes a singular verb ('has')." },
+            { cat: 'grammar', diff: 'extreme', q: "Sentence Correction: 'Walking down the street, the trees were beautiful.'", options: ["As I walked down the street, the trees were beautiful.", "Walking down the street, beautiful were the trees.", "The trees were beautiful, walking down the street.", "No correction"], answer: 0, hint: "Grammar Rule: Dangling modifier. The original implies the trees were walking." },
+            { cat: 'grammar', diff: 'extreme', q: "One word substitution: 'A person who is indifferent to the pains and pleasures of life.'", options: ["Stoic", "Cynic", "Ascetic", "Epicurean"], answer: 0, hint: "Vocabulary: A stoic endures pain or hardship without showing their feelings." },
+            { cat: 'grammar', diff: 'extreme', q: "Choose the antonym for 'Enervate'.", options: ["Exhaust", "Invigorate", "Debilitate", "Complicate"], answer: 1, hint: "Vocabulary: 'Enervate' means to drain of energy. 'Invigorate' means to give strength." },
+            { cat: 'grammar', diff: 'extreme', q: "Identify the error: 'He lay the book on the table yesterday.'", options: ["He lay", "the book", "on the table", "yesterday"], answer: 0, hint: "Grammar Rule: The past tense of the transitive verb 'lay' (to place) is 'laid'." },
+            { cat: 'grammar', diff: 'extreme', q: "Fill in the blank: 'He is known for his ___ approach, always thinking about the future rather than the past.'", options: ["retroactive", "retrospective", "proactive", "reactive"], answer: 2, hint: "Vocabulary: 'Proactive' means acting in anticipation of future problems." },
+            { cat: 'grammar', diff: 'extreme', q: "Which word is spelled correctly?", options: ["Supercede", "Supersede", "Superceed", "Suppercede"], answer: 1, hint: "Spelling Rule: It comes from Latin 'sedere' (to sit). It's the only English word ending in '-sede'." },
+            { cat: 'grammar', diff: 'extreme', q: "Meaning of idiom: 'To rest on your laurels'", options: ["To take a well-deserved break", "To rely on past achievements and stop putting in effort", "To win a major award", "To hide your successes"], answer: 1, hint: "Idiom Usage: Refers to the laurel wreaths given to victors in ancient Greece." },
+            { cat: 'grammar', diff: 'extreme', q: "Sentence Correction: 'I prefer coffee than tea.'", options: ["coffee to tea", "coffee over tea", "coffee more than tea", "No correction"], answer: 0, hint: "Grammar Rule: The verb 'prefer' is followed by the preposition 'to', not 'than'." },
+            { cat: 'grammar', diff: 'extreme', q: "Identify the error: 'Neither the manager nor the employees was aware of the change.'", options: ["Neither the manager", "nor the employees", "was aware", "of the change"], answer: 2, hint: "Grammar Rule: In 'neither... nor', the verb agrees with the noun closer to it (employees -> were)." },
+            { cat: 'grammar', diff: 'extreme', q: "Fill in the blank: 'Her ___ nature made it difficult for her to accept any form of criticism.'", options: ["docile", "recalcitrant", "amenable", "pliant"], answer: 1, hint: "Vocabulary: 'Recalcitrant' means having an obstinately uncooperative attitude." },
+            { cat: 'grammar', diff: 'extreme', q: "Synonym of 'Sycophant'", options: ["Critic", "Flatterer", "Leader", "Rebel"], answer: 1, hint: "Vocabulary: A person who acts obsequiously toward someone important to gain advantage." },
+            { cat: 'grammar', diff: 'extreme', q: "Antonym of 'Mellifluous'", options: ["Sweet", "Smooth", "Cacophonous", "Harmonious"], answer: 2, hint: "Vocabulary: Mellifluous means sweet-sounding. Cacophonous means harsh-sounding." },
+            { cat: 'grammar', diff: 'extreme', q: "Identify the error: 'If he would have worked harder, he would have passed.'", options: ["If he would have", "worked harder", "he would have", "passed"], answer: 0, hint: "Grammar Rule: Conditional Type 3 requires 'If + past perfect' (If he had worked)." },
+            { cat: 'grammar', diff: 'extreme', q: "What does 'Sui generis' mean?", options: ["Of the same kind", "Unique; in a class by itself", "For the public good", "Under penalty"], answer: 1, hint: "Latin: Literally 'of its own kind'." },
+            { cat: 'grammar', diff: 'extreme', q: "Fill in the blank: 'His speech was full of ___, making it hard to find any real substance.'", options: ["platitudes", "epiphanies", "axioms", "postulates"], answer: 0, hint: "Vocabulary: 'Platitude' is a remark or statement that has been used too often to be interesting." },
+            { cat: 'grammar', diff: 'extreme', q: "Sentence Correction: 'He is as smart, if not smarter, than his brother.'", options: ["as smart as, if not smarter than,", "as smart, if not smarter than,", "as smart than, if not smarter than,", "No correction"], answer: 0, hint: "Grammar Rule: Parallelism requires complete correlative pairs ('as smart AS')." },
+            { cat: 'grammar', diff: 'extreme', q: "Choose the synonym for 'Lugubrious'.", options: ["Cheerful", "Mournful", "Luminous", "Heavy"], answer: 1, hint: "Vocabulary: Looking or sounding sad and dismal." },
+            { cat: 'grammar', diff: 'extreme', q: "Choose the antonym for 'Pusillanimous'.", options: ["Cowardly", "Timid", "Courageous", "Weak"], answer: 2, hint: "Vocabulary: Showing a lack of courage or determination." },
+            { cat: 'grammar', diff: 'extreme', q: "Identify the error: 'He has been working here since three years.'", options: ["He has been", "working here", "since", "three years"], answer: 2, hint: "Grammar Rule: 'For' is used for duration; 'since' is for a specific point in time." },
+            { cat: 'grammar', diff: 'extreme', q: "Meaning of idiom: 'To cut the Gordian knot'", options: ["To create a complex problem", "To solve a difficult problem in a quick, decisive manner", "To tie something securely", "To ruin a plan"], answer: 1, hint: "Idiom Usage: Legend of Alexander the Great solving an impossible knot by slicing it." },
+            { cat: 'grammar', diff: 'extreme', q: "Sentence Correction: 'The number of people attending the event are increasing.'", options: ["is increasing", "were increasing", "have increased", "No correction"], answer: 0, hint: "Grammar Rule: 'The number of' takes a singular verb, unlike 'A number of' which takes plural." },
+            { cat: 'grammar', diff: 'extreme', q: "Fill in the blank: 'The evidence presented was completely ___, leading to an immediate dismissal of the case.'", options: ["spurious", "authentic", "cogent", "irrefutable"], answer: 0, hint: "Vocabulary: 'Spurious' means not being what it purports to be; false or fake." },
+            { cat: 'grammar', diff: 'extreme', q: "One word substitution: 'A hater of mankind.'", options: ["Misanthrope", "Philanthropist", "Misogynist", "Cynic"], answer: 0, hint: "Greek roots: 'misein' (to hate) + 'anthropos' (man)." },
+            { cat: 'grammar', diff: 'extreme', q: "Choose the correct spelling:", options: ["Idiosyncracy", "Idiosyncrasy", "Idiosyncresy", "Idiosyncrasi"], answer: 1, hint: "Spelling Rule: Ends in '-sy', deriving from Greek 'sunkrasis'." },
+            { cat: 'grammar', diff: 'extreme', q: "Fill in the blank: 'Despite the chaotic circumstances, she remained entirely ___.'", options: ["flustered", "imperturbable", "agitated", "petulant"], answer: 1, hint: "Vocabulary: 'Imperturbable' means unable to be upset or excited; calm." },
+            { passage: "The deleterious effects of the policy were obfuscated by a barrage of circumlocution from the committee.", cat: 'grammar', diff: 'extreme', q: "What was the committee doing?", options: ["Clarifying the policy", "Using excessive words to hide harm", "Praising the policy", "Amending the effects directly"], answer: 1, hint: "RC Inference: 'Deleterious' (harmful), 'obfuscated' (hidden), 'circumlocution' (wordiness)." },
+            { passage: "The deleterious effects of the policy were obfuscated by a barrage of circumlocution from the committee.", cat: 'grammar', diff: 'extreme', q: "What kind of effects did the policy have?", options: ["Beneficial", "Harmful", "Neutral", "Unpredictable"], answer: 1, hint: "RC Inference: 'Deleterious' translates to causing harm or damage." },
+            { cat: 'grammar', diff: 'extreme', q: "Identify the error: 'Whom did you say is going to lead the project?'", options: ["Whom", "did you say", "is going", "to lead"], answer: 0, hint: "Grammar Rule: Use 'Who' because it is the subject of the verb 'is going'." },
+            { cat: 'grammar', diff: 'extreme', q: "Meaning of idiom: 'To cross the Rubicon'", options: ["To back down from a fight", "To take an irrevocable step that commits one to a specific course", "To travel a long distance", "To solve a puzzle"], answer: 1, hint: "Idiom Usage: Julius Caesar's point of no return." },
+            { cat: 'grammar', diff: 'extreme', q: "Fill in the blank: 'The diplomat's ___ response managed to appease both factions.'", options: ["belligerent", "tactless", "diplomatic", "politic"], answer: 3, hint: "Vocabulary: 'Politic' means seeming sensible and judicious under the circumstances." },
+            { cat: 'grammar', diff: 'extreme', q: "Synonym of 'Alacrity'", options: ["Hesitation", "Sluggishness", "Eagerness", "Apathy"], answer: 2, hint: "Vocabulary: Brisk and cheerful readiness." },
+            { cat: 'grammar', diff: 'extreme', q: "Antonym of 'Profligate'", options: ["Extravagant", "Wasteful", "Thrifty", "Reckless"], answer: 2, hint: "Vocabulary: 'Profligate' means recklessly extravagant. Opposite is thrifty/frugal." }
         ];
 
         let activeQuizData = [];
@@ -189,32 +273,32 @@
             
             if (viewState === 'start') {
                 app.innerHTML = `
-                    <div class="bg-white p-6 md:p-10 lg:p-12 rounded-3xl shadow-xl text-center fade-in mx-auto w-full border border-slate-100">
-                        <div class="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 lg:mb-8 shadow-inner">
-                            <i class="fas fa-laptop-code text-2xl md:text-3xl lg:text-4xl"></i>
+                    <div class="bg-white p-6 md:p-10 rounded-3xl shadow-xl text-center fade-in max-w-4xl mx-auto w-full border border-slate-100">
+                        <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                            <i class="fas fa-laptop-code text-2xl md:text-3xl"></i>
                         </div>
-                        <h1 class="text-2xl md:text-4xl lg:text-5xl font-extrabold text-slate-800 mb-4 lg:mb-6 tracking-tight">IT Aptitude & Grammar Assessment</h1>
-                        <p class="text-slate-500 mb-8 md:mb-12 lg:mb-14 max-w-2xl mx-auto text-sm md:text-base lg:text-lg leading-relaxed">Prepare for your upcoming interview. Choose a module below to begin your focused practice session.</p>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8 max-w-3xl mx-auto">
+                        <h1 class="text-2xl md:text-4xl font-extrabold text-slate-800 mb-4 tracking-tight">IT Aptitude & Grammar Assessment</h1>
+                        <p class="text-slate-500 mb-8 md:mb-12 max-w-lg mx-auto text-sm md:text-base leading-relaxed">Prepare for your upcoming interview. Choose a module below to begin your focused practice session.</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 max-w-2xl mx-auto">
                             <!-- Math Option -->
-                            <button onclick="selectCategory('math')" class="bg-slate-50 hover:bg-indigo-50 border-2 border-slate-100 hover:border-indigo-400 p-6 md:p-8 lg:p-10 rounded-2xl transition-all duration-300 group flex flex-col items-center text-center cursor-pointer shadow-sm hover:shadow-md transform hover:-translate-y-1">
-                                <div class="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-white text-indigo-600 rounded-full flex items-center justify-center mb-4 lg:mb-5 group-hover:scale-110 transition-transform duration-300 shadow-sm border border-indigo-50">
-                                    <i class="fas fa-calculator text-xl md:text-2xl lg:text-3xl"></i>
+                            <button onclick="selectCategory('math')" class="bg-slate-50 hover:bg-indigo-50 border-2 border-slate-100 hover:border-indigo-400 p-6 md:p-8 rounded-2xl transition-all duration-300 group flex flex-col items-center text-center cursor-pointer shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="w-14 h-14 md:w-16 md:h-16 bg-white text-indigo-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm border border-indigo-50">
+                                    <i class="fas fa-calculator text-xl md:text-2xl"></i>
                                 </div>
-                                <div class="font-bold text-lg md:text-xl lg:text-2xl text-slate-800 mb-2 lg:mb-3 group-hover:text-indigo-900">Quantitative Math</div>
-                                <div class="text-slate-500 mb-6 text-xs md:text-sm lg:text-base leading-relaxed">Includes 60 Questions across 3 difficulty tiers on arithmetic, percentages, speed & distance.</div>
-                                <div class="text-indigo-600 font-semibold mt-auto flex items-center bg-white px-4 md:px-5 lg:px-6 py-2 md:py-2.5 lg:py-3 rounded-xl shadow-sm border border-indigo-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors text-sm md:text-base lg:text-base">Select Math <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i></div>
+                                <div class="font-bold text-lg md:text-xl text-slate-800 mb-2 group-hover:text-indigo-900">Quantitative Math</div>
+                                <div class="text-slate-500 mb-6 text-xs md:text-sm">Includes 100 Questions across 4 difficulty tiers on arithmetic, percentages, speed & distance.</div>
+                                <div class="text-indigo-600 font-semibold mt-auto flex items-center bg-white px-4 md:px-5 py-2 md:py-2.5 rounded-xl shadow-sm border border-indigo-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors text-sm md:text-base">Select Math <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i></div>
                             </button>
                             
                             <!-- Grammar Option -->
-                            <button onclick="selectCategory('grammar')" class="bg-slate-50 hover:bg-emerald-50 border-2 border-slate-100 hover:border-emerald-400 p-6 md:p-8 lg:p-10 rounded-2xl transition-all duration-300 group flex flex-col items-center text-center cursor-pointer shadow-sm hover:shadow-md transform hover:-translate-y-1">
-                                <div class="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-white text-emerald-600 rounded-full flex items-center justify-center mb-4 lg:mb-5 group-hover:scale-110 transition-transform duration-300 shadow-sm border border-emerald-50">
-                                    <i class="fas fa-spell-check text-xl md:text-2xl lg:text-3xl"></i>
+                            <button onclick="selectCategory('grammar')" class="bg-slate-50 hover:bg-emerald-50 border-2 border-slate-100 hover:border-emerald-400 p-6 md:p-8 rounded-2xl transition-all duration-300 group flex flex-col items-center text-center cursor-pointer shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="w-14 h-14 md:w-16 md:h-16 bg-white text-emerald-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm border border-emerald-50">
+                                    <i class="fas fa-spell-check text-xl md:text-2xl"></i>
                                 </div>
-                                <div class="font-bold text-lg md:text-xl lg:text-2xl text-slate-800 mb-2 lg:mb-3 group-hover:text-emerald-900">Verbal & Grammar</div>
-                                <div class="text-slate-500 mb-6 text-xs md:text-sm lg:text-base leading-relaxed">Includes 60 Questions across 3 difficulty tiers on comprehension, error detection, and vocabulary.</div>
-                                <div class="text-emerald-600 font-semibold mt-auto flex items-center bg-white px-4 md:px-5 lg:px-6 py-2 md:py-2.5 lg:py-3 rounded-xl shadow-sm border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors text-sm md:text-base lg:text-base">Select Grammar <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i></div>
+                                <div class="font-bold text-lg md:text-xl text-slate-800 mb-2 group-hover:text-emerald-900">Verbal & Grammar</div>
+                                <div class="text-slate-500 mb-6 text-xs md:text-sm">Includes 100 Questions across 4 difficulty tiers on comprehension, error detection, and vocabulary.</div>
+                                <div class="text-emerald-600 font-semibold mt-auto flex items-center bg-white px-4 md:px-5 py-2 md:py-2.5 rounded-xl shadow-sm border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors text-sm md:text-base">Select Grammar <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i></div>
                             </button>
                         </div>
                     </div>
@@ -223,46 +307,54 @@
             else if (viewState === 'difficulty') {
                 const titleStr = currentCategory === 'math' ? 'Quantitative Math' : 'Verbal Ability';
                 const iconStr = currentCategory === 'math' ? 'fa-calculator text-indigo-500' : 'fa-spell-check text-emerald-500';
-                const colorTheme = currentCategory === 'math' ? 'indigo' : 'emerald';
 
                 app.innerHTML = `
-                    <div class="bg-white p-6 md:p-10 lg:p-12 rounded-3xl shadow-xl text-center fade-in mx-auto w-full border border-slate-100">
-                        <button onclick="viewState='start'; render()" class="text-sm font-medium text-slate-400 hover:text-slate-700 mb-6 lg:mb-8 flex items-center justify-center mx-auto transition-colors bg-slate-50 hover:bg-slate-100 px-4 py-2 rounded-full">
+                    <div class="bg-white p-6 md:p-10 rounded-3xl shadow-xl text-center fade-in max-w-5xl mx-auto w-full border border-slate-100">
+                        <button onclick="viewState='start'; render()" class="text-sm font-medium text-slate-400 hover:text-slate-700 mb-6 flex items-center justify-center mx-auto transition-colors bg-slate-50 hover:bg-slate-100 px-4 py-2 rounded-full">
                             <i class="fas fa-arrow-left mr-2"></i> Back to Subjects
                         </button>
-
-                        <div class="mb-8 lg:mb-10">
-                            <i class="fas ${iconStr} text-3xl md:text-4xl lg:text-5xl mb-3 md:mb-4"></i>
-                            <h2 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-slate-800 mb-2 lg:mb-3">${titleStr}</h2>
-                            <p class="text-slate-500 text-sm md:text-base lg:text-lg">Select your difficulty level. Each tier contains a set of 20 questions.</p>
+                        
+                        <div class="mb-8">
+                            <i class="fas ${iconStr} text-3xl md:text-4xl mb-3"></i>
+                            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 mb-2">${titleStr}</h2>
+                            <p class="text-slate-500">Select your difficulty level. Each session pulls 20 questions randomly from the pool.</p>
                         </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 lg:gap-6 w-full max-w-3xl mx-auto">
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 w-full mx-auto">
                             <!-- Easy -->
-                            <button onclick="startLevel('easy')" class="bg-slate-50 border-2 border-slate-100 hover:border-green-400 hover:bg-green-50 p-6 lg:p-8 rounded-2xl transition-all group flex flex-col items-center justify-center shadow-sm hover:shadow-md transform hover:-translate-y-1">
-                                <div class="w-12 h-12 lg:w-16 lg:h-16 bg-white text-green-500 rounded-full flex items-center justify-center mb-3 lg:mb-4 shadow-sm border border-green-100 group-hover:bg-green-500 group-hover:text-white transition-colors">
-                                    <i class="fas fa-seedling text-lg lg:text-2xl"></i>
+                            <button onclick="startLevel('easy')" class="bg-slate-50 border-2 border-slate-100 hover:border-green-400 hover:bg-green-50 p-6 rounded-2xl transition-all group flex flex-col items-center justify-center shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="w-12 h-12 bg-white text-green-500 rounded-full flex items-center justify-center mb-3 shadow-sm border border-green-100 group-hover:bg-green-500 group-hover:text-white transition-colors">
+                                    <i class="fas fa-seedling text-lg"></i>
                                 </div>
-                                <div class="font-bold text-lg lg:text-xl text-slate-800 group-hover:text-green-900">Easy</div>
-                                <div class="text-xs lg:text-sm text-slate-400 mt-1 lg:mt-2 font-medium bg-white px-2 py-1 rounded border border-slate-200">20 Questions</div>
+                                <div class="font-bold text-lg text-slate-800 group-hover:text-green-900">Easy</div>
+                                <div class="text-xs text-slate-400 mt-1 font-medium bg-white px-2 py-1 rounded border border-slate-200">20 Q's Pool</div>
                             </button>
                             
                             <!-- Medium -->
-                            <button onclick="startLevel('medium')" class="bg-slate-50 border-2 border-slate-100 hover:border-amber-400 hover:bg-amber-50 p-6 lg:p-8 rounded-2xl transition-all group flex flex-col items-center justify-center shadow-sm hover:shadow-md transform hover:-translate-y-1">
-                                <div class="w-12 h-12 lg:w-16 lg:h-16 bg-white text-amber-500 rounded-full flex items-center justify-center mb-3 lg:mb-4 shadow-sm border border-amber-100 group-hover:bg-amber-500 group-hover:text-white transition-colors">
-                                    <i class="fas fa-balance-scale text-lg lg:text-2xl"></i>
+                            <button onclick="startLevel('medium')" class="bg-slate-50 border-2 border-slate-100 hover:border-amber-400 hover:bg-amber-50 p-6 rounded-2xl transition-all group flex flex-col items-center justify-center shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="w-12 h-12 bg-white text-amber-500 rounded-full flex items-center justify-center mb-3 shadow-sm border border-amber-100 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                                    <i class="fas fa-balance-scale text-lg"></i>
                                 </div>
-                                <div class="font-bold text-lg lg:text-xl text-slate-800 group-hover:text-amber-900">Medium</div>
-                                <div class="text-xs lg:text-sm text-slate-400 mt-1 lg:mt-2 font-medium bg-white px-2 py-1 rounded border border-slate-200">20 Questions</div>
+                                <div class="font-bold text-lg text-slate-800 group-hover:text-amber-900">Medium</div>
+                                <div class="text-xs text-slate-400 mt-1 font-medium bg-white px-2 py-1 rounded border border-slate-200">20 Q's Pool</div>
                             </button>
 
                             <!-- Hard -->
-                            <button onclick="startLevel('hard')" class="bg-slate-50 border-2 border-slate-100 hover:border-red-400 hover:bg-red-50 p-6 lg:p-8 rounded-2xl transition-all group flex flex-col items-center justify-center shadow-sm hover:shadow-md transform hover:-translate-y-1">
-                                <div class="w-12 h-12 lg:w-16 lg:h-16 bg-white text-red-500 rounded-full flex items-center justify-center mb-3 lg:mb-4 shadow-sm border border-red-100 group-hover:bg-red-500 group-hover:text-white transition-colors">
-                                    <i class="fas fa-fire text-lg lg:text-2xl"></i>
+                            <button onclick="startLevel('hard')" class="bg-slate-50 border-2 border-slate-100 hover:border-red-400 hover:bg-red-50 p-6 rounded-2xl transition-all group flex flex-col items-center justify-center shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="w-12 h-12 bg-white text-red-500 rounded-full flex items-center justify-center mb-3 shadow-sm border border-red-100 group-hover:bg-red-500 group-hover:text-white transition-colors">
+                                    <i class="fas fa-fire text-lg"></i>
                                 </div>
-                                <div class="font-bold text-lg lg:text-xl text-slate-800 group-hover:text-red-900">Hard</div>
-                                <div class="text-xs lg:text-sm text-slate-400 mt-1 lg:mt-2 font-medium bg-white px-2 py-1 rounded border border-slate-200">20 Questions</div>
+                                <div class="font-bold text-lg text-slate-800 group-hover:text-red-900">Hard</div>
+                                <div class="text-xs text-slate-400 mt-1 font-medium bg-white px-2 py-1 rounded border border-slate-200">20 Q's Pool</div>
+                            </button>
+
+                            <!-- Extreme -->
+                            <button onclick="startLevel('extreme')" class="bg-slate-50 border-2 border-slate-100 hover:border-purple-400 hover:bg-purple-50 p-6 rounded-2xl transition-all group flex flex-col items-center justify-center shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="w-12 h-12 bg-white text-purple-500 rounded-full flex items-center justify-center mb-3 shadow-sm border border-purple-100 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                                    <i class="fas fa-bolt text-lg"></i>
+                                </div>
+                                <div class="font-bold text-lg text-slate-800 group-hover:text-purple-900">Extreme</div>
+                                <div class="text-xs text-slate-400 mt-1 font-medium bg-white px-2 py-1 rounded border border-slate-200">40 Q's Pool</div>
                             </button>
                         </div>
                     </div>
@@ -274,38 +366,38 @@
                 const hasAnswered = answers[currentQuestion] !== null;
 
                 app.innerHTML = `
-                    <div class="bg-white p-5 sm:p-8 md:p-10 lg:p-12 rounded-3xl shadow-xl fade-in border border-slate-100 w-full mx-auto">
-                        <div class="mb-6 md:mb-8 lg:mb-10">
-                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 lg:mb-5">
-                                <span class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-3 py-1.5 lg:py-2 rounded-lg border border-blue-200 shadow-sm flex items-center">
+                    <div class="bg-white p-5 sm:p-8 md:p-10 rounded-3xl shadow-xl fade-in border border-slate-100 w-full max-w-3xl mx-auto">
+                        <div class="mb-6 md:mb-8">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                                <span class="text-xs font-bold uppercase tracking-wider ${currentDifficulty === 'extreme' ? 'text-purple-700 bg-purple-100 border-purple-200' : 'text-blue-700 bg-blue-100 border-blue-200'} px-3 py-1.5 rounded-lg border shadow-sm flex items-center">
                                     <i class="fas fa-layer-group mr-2 opacity-70"></i> ${currentCategoryName}
                                 </span>
-                                <span class="text-xs md:text-sm lg:text-base text-slate-500 font-bold bg-slate-100 px-3 py-1.5 lg:py-2 rounded-lg">
+                                <span class="text-xs md:text-sm text-slate-500 font-bold bg-slate-100 px-3 py-1.5 rounded-lg">
                                     Question ${currentQuestion + 1} of ${activeQuizData.length}
                                 </span>
                             </div>
-                            <div class="w-full bg-slate-100 rounded-full h-2.5 md:h-3 lg:h-4 shadow-inner overflow-hidden">
-                                <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full transition-all duration-500 ease-out" style="width: ${progress}%"></div>
+                            <div class="w-full bg-slate-100 rounded-full h-2.5 md:h-3 shadow-inner overflow-hidden">
+                                <div class="bg-gradient-to-r ${currentDifficulty === 'extreme' ? 'from-purple-500 to-purple-600' : 'from-blue-500 to-blue-600'} h-full rounded-full transition-all duration-500 ease-out" style="width: ${progress}%"></div>
                             </div>
                         </div>
 
                         ${q.passage ? `
-                            <div class="mb-6 lg:mb-8 p-4 md:p-5 lg:p-6 bg-slate-50 rounded-2xl border border-slate-200 text-slate-600 italic text-sm md:text-base lg:text-lg leading-relaxed shadow-sm">
-                                <div class="font-bold text-slate-800 not-italic mb-2 lg:mb-3 flex items-center"><i class="fas fa-book-open mr-2 text-blue-500"></i>Reading Comprehension Context:</div>
+                            <div class="mb-6 p-4 md:p-5 bg-slate-50 rounded-2xl border border-slate-200 text-slate-600 italic text-sm md:text-base leading-relaxed shadow-sm">
+                                <div class="font-bold text-slate-800 not-italic mb-2 flex items-center"><i class="fas fa-book-open mr-2 text-${currentDifficulty === 'extreme' ? 'purple' : 'blue'}-500"></i>Reading Comprehension Context:</div>
                                 "${q.passage}"
                             </div>
                         ` : ''}
 
-                        <h2 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-800 mb-6 md:mb-8 lg:mb-10 leading-snug">${currentQuestion + 1}. ${q.q}</h2>
+                        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 mb-6 md:mb-8 leading-snug">${currentQuestion + 1}. ${q.q}</h2>
                         
-                        <div class="space-y-3 lg:space-y-4 mb-8">
+                        <div class="space-y-3 mb-8">
                             ${q.options.map((opt, i) => {
                                 const isSelected = answers[currentQuestion] === i;
                                 const isCorrect = q.answer === i;
-
-                                let btnClasses = "border-slate-200 hover:border-blue-300 hover:bg-slate-50 cursor-pointer shadow-sm";
+                                
+                                let btnClasses = `border-slate-200 hover:border-${currentDifficulty === 'extreme' ? 'purple' : 'blue'}-300 hover:bg-slate-50 cursor-pointer shadow-sm`;
                                 let textClasses = "text-slate-700";
-                                let circleClasses = "border-slate-300 group-hover:border-blue-400";
+                                let circleClasses = `border-slate-300 group-hover:border-${currentDifficulty === 'extreme' ? 'purple' : 'blue'}-400`;
                                 let circleContent = "";
 
                                 if (hasAnswered) {
@@ -327,10 +419,10 @@
                                 }
 
                                 return `
-                                    <button ${hasAnswered ? 'disabled' : `onclick="selectAnswer(${i})"`}
-                                        class="w-full text-left p-4 sm:p-5 lg:p-6 rounded-2xl border-2 transition-all duration-200 flex items-center justify-between group ${btnClasses}">
-                                        <span class="${textClasses} text-sm sm:text-base lg:text-lg">${opt}</span>
-                                        <div class="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-colors ${circleClasses}">
+                                    <button ${hasAnswered ? 'disabled' : `onclick="selectAnswer(${i})"`} 
+                                        class="w-full text-left p-4 sm:p-5 rounded-2xl border-2 transition-all duration-200 flex items-center justify-between group ${btnClasses}">
+                                        <span class="${textClasses} text-sm sm:text-base">${opt}</span>
+                                        <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-colors ${circleClasses}">
                                             ${circleContent}
                                         </div>
                                     </button>
@@ -338,22 +430,22 @@
                             }).join('')}
                         </div>
 
-                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 lg:gap-5 pt-6 lg:pt-8 border-t border-slate-100">
-                            <button onclick="toggleHint()" class="text-slate-600 hover:text-amber-700 font-semibold text-sm lg:text-base transition-colors flex items-center justify-center bg-slate-100 hover:bg-amber-100 px-5 py-3 lg:py-4 rounded-xl border border-slate-200 hover:border-amber-300 shadow-sm w-full sm:w-auto">
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-6 border-t border-slate-100">
+                            <button onclick="toggleHint()" class="text-slate-600 hover:text-amber-700 font-semibold text-sm transition-colors flex items-center justify-center bg-slate-100 hover:bg-amber-100 px-5 py-3 rounded-xl border border-slate-200 hover:border-amber-300 shadow-sm w-full sm:w-auto">
                                 <i class="fas fa-lightbulb mr-2 text-amber-500 text-lg"></i> ${showHint ? 'Hide Hint / Formula' : 'Show Hint / Formula'}
                             </button>
-
+                            
                             <div class="flex gap-3 w-full sm:w-auto">
-                                <button onclick="prevQuestion()" class="flex-1 sm:flex-none px-5 py-3 lg:py-4 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 shadow-sm transition-colors ${currentQuestion === 0 ? 'opacity-50 cursor-not-allowed' : ''}" ${currentQuestion === 0 ? 'disabled' : ''}>Back</button>
-                                <button onclick="nextQuestion()" class="flex-1 sm:flex-none px-6 py-3 lg:py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center text-sm lg:text-base" ${!hasAnswered ? 'disabled' : ''}>
+                                <button onclick="prevQuestion()" class="flex-1 sm:flex-none px-5 py-3 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 shadow-sm transition-colors ${currentQuestion === 0 ? 'opacity-50 cursor-not-allowed' : ''}" ${currentQuestion === 0 ? 'disabled' : ''}>Back</button>
+                                <button onclick="nextQuestion()" class="flex-1 sm:flex-none px-6 py-3 ${currentDifficulty === 'extreme' ? 'bg-purple-600 hover:bg-purple-700 shadow-purple-200' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-200'} text-white rounded-xl font-bold shadow-lg transition-all disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center" ${!hasAnswered ? 'disabled' : ''}>
                                     ${currentQuestion === activeQuizData.length - 1 ? 'Finish Set <i class="fas fa-flag-checkered ml-2"></i>' : 'Next <i class="fas fa-arrow-right ml-2"></i>'}
                                 </button>
                             </div>
                         </div>
 
                         ${showHint ? `
-                        <div class="mt-6 lg:mt-8 p-4 sm:p-5 lg:p-6 bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200 text-amber-900 rounded-2xl text-sm sm:text-base lg:text-lg fade-in shadow-inner leading-relaxed">
-                            <div class="font-bold flex items-center mb-1 lg:mb-2 text-amber-800"><i class="fas fa-magic mr-2"></i> Learning Rule:</div>
+                        <div class="mt-6 p-4 sm:p-5 bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200 text-amber-900 rounded-2xl text-sm sm:text-base fade-in shadow-inner leading-relaxed">
+                            <div class="font-bold flex items-center mb-1 text-amber-800"><i class="fas fa-magic mr-2"></i> Learning Rule:</div>
                             ${q.hint}
                         </div>` : ''}
                     </div>
@@ -373,75 +465,75 @@
                 else { feedback = "Keep practicing! Review the formulas/rules in the detailed breakdown below."; themeColor = "red"; icon = "fa-book-reader"; }
 
                 app.innerHTML = `
-                    <div class="bg-white p-6 sm:p-8 md:p-10 lg:p-12 rounded-3xl shadow-xl fade-in mx-auto w-full border border-slate-100">
-                        <div class="text-center mb-8 lg:mb-10 pb-8 lg:pb-10 border-b border-slate-100">
-                            <div class="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 mx-auto rounded-full flex items-center justify-center mb-5 lg:mb-6 bg-${themeColor}-100 text-${themeColor}-500 shadow-inner">
-                                <i class="fas ${icon} text-3xl sm:text-4xl lg:text-5xl"></i>
+                    <div class="bg-white p-6 sm:p-8 md:p-10 rounded-3xl shadow-xl fade-in max-w-4xl mx-auto w-full border border-slate-100">
+                        <div class="text-center mb-8 pb-8 border-b border-slate-100">
+                            <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full flex items-center justify-center mb-5 bg-${themeColor}-100 text-${themeColor}-500 shadow-inner">
+                                <i class="fas ${icon} text-3xl sm:text-4xl"></i>
                             </div>
-                            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-800 mb-2 lg:mb-3">Set Completed!</h2>
-                            <p class="text-slate-500 mb-6 lg:mb-8 text-sm sm:text-base lg:text-lg max-w-xl mx-auto">${feedback}</p>
-
-                            <div class="inline-block bg-slate-50 px-8 lg:px-10 py-6 lg:py-8 rounded-3xl border border-slate-100 shadow-sm mb-8 lg:mb-10">
-                                <div class="text-4xl sm:text-5xl lg:text-6xl font-black text-${themeColor}-600 tracking-tighter mb-2 lg:mb-3">${percentage}%</div>
-                                <div class="text-sm sm:text-base lg:text-lg text-slate-600 font-semibold uppercase tracking-widest">${score} out of ${activeQuizData.length} Correct</div>
-                                <div class="mt-3 lg:mt-4 inline-block bg-white border border-slate-200 text-slate-500 text-xs lg:text-sm font-bold px-3 lg:px-4 py-1.5 lg:py-2 rounded-full shadow-sm">
+                            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-2">Set Completed!</h2>
+                            <p class="text-slate-500 mb-6 text-sm sm:text-base max-w-md mx-auto">${feedback}</p>
+                            
+                            <div class="inline-block bg-slate-50 px-8 py-6 rounded-3xl border border-slate-100 shadow-sm mb-8">
+                                <div class="text-4xl sm:text-6xl font-black text-${themeColor}-600 tracking-tighter mb-1">${percentage}%</div>
+                                <div class="text-sm sm:text-base text-slate-600 font-semibold uppercase tracking-widest">${score} out of ${activeQuizData.length} Correct</div>
+                                <div class="mt-3 inline-block bg-white border border-slate-200 text-slate-500 text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                                     <i class="fas fa-layer-group text-${themeColor}-500 mr-1"></i> ${currentCategoryName}
                                 </div>
                             </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4 w-full max-w-3xl mx-auto">
-                                <button onclick="startLevel(currentDifficulty)" class="px-4 py-3 sm:py-4 lg:py-5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-md transition-all flex flex-col items-center justify-center text-sm lg:text-base group">
-                                    <i class="fas fa-redo mb-1 lg:mb-2 group-hover:-rotate-90 transition-transform"></i> Retry Level
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-2xl mx-auto">
+                                <button onclick="startLevel(currentDifficulty)" class="px-4 py-3 sm:py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-md transition-all flex flex-col items-center justify-center text-sm group">
+                                    <i class="fas fa-redo mb-1 group-hover:-rotate-90 transition-transform"></i> Retry Level
                                 </button>
-                                <button onclick="viewState='difficulty'; render()" class="px-4 py-3 sm:py-4 lg:py-5 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-900 shadow-md transition-all flex flex-col items-center justify-center text-sm lg:text-base">
-                                    <i class="fas fa-layer-group mb-1 lg:mb-2"></i> Change Level
+                                <button onclick="viewState='difficulty'; render()" class="px-4 py-3 sm:py-4 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-900 shadow-md transition-all flex flex-col items-center justify-center text-sm">
+                                    <i class="fas fa-layer-group mb-1"></i> Change Level
                                 </button>
-                                <button onclick="restartQuiz()" class="px-4 py-3 sm:py-4 lg:py-5 bg-slate-100 text-slate-700 border border-slate-300 rounded-xl font-bold hover:bg-slate-200 shadow-sm transition-all flex flex-col items-center justify-center text-sm lg:text-base">
-                                    <i class="fas fa-exchange-alt mb-1 lg:mb-2"></i> Change Subject
+                                <button onclick="restartQuiz()" class="px-4 py-3 sm:py-4 bg-slate-100 text-slate-700 border border-slate-300 rounded-xl font-bold hover:bg-slate-200 shadow-sm transition-all flex flex-col items-center justify-center text-sm">
+                                    <i class="fas fa-exchange-alt mb-1"></i> Change Subject
                                 </button>
                             </div>
                         </div>
 
                         <div>
-                            <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 mb-6 lg:mb-8 flex items-center"><i class="fas fa-clipboard-list mr-3 text-blue-500"></i>Question Review</h3>
-                            <div class="space-y-6 lg:space-y-8">
+                            <h3 class="text-xl sm:text-2xl font-bold text-slate-800 mb-6 flex items-center"><i class="fas fa-clipboard-list mr-3 text-blue-500"></i>Question Review</h3>
+                            <div class="space-y-6">
                                 ${activeQuizData.map((q, i) => `
-                                    <div class="p-5 sm:p-6 lg:p-8 rounded-2xl border-2 ${answers[i] === q.answer ? 'bg-white border-green-200 shadow-sm' : 'bg-red-50/30 border-red-200'}">
-                                        <div class="flex items-start mb-4 lg:mb-5">
-                                            <div class="mr-3 sm:mr-4 lg:mr-5 mt-0.5 flex-shrink-0">
-                                                ${answers[i] === q.answer ?
-                                                    '<div class="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-green-500 flex items-center justify-center text-white text-xs sm:text-sm shadow-sm"><i class="fas fa-check"></i></div>' :
-                                                    '<div class="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-red-500 flex items-center justify-center text-white text-xs sm:text-sm shadow-sm"><i class="fas fa-times"></i></div>'
+                                    <div class="p-5 sm:p-6 rounded-2xl border-2 ${answers[i] === q.answer ? 'bg-white border-green-200 shadow-sm' : 'bg-red-50/30 border-red-200'}">
+                                        <div class="flex items-start mb-4">
+                                            <div class="mr-3 sm:mr-4 mt-0.5 flex-shrink-0">
+                                                ${answers[i] === q.answer ? 
+                                                    '<div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-xs sm:text-sm shadow-sm"><i class="fas fa-check"></i></div>' : 
+                                                    '<div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-red-500 flex items-center justify-center text-white text-xs sm:text-sm shadow-sm"><i class="fas fa-times"></i></div>'
                                                 }
                                             </div>
-                                            <div class="flex-1">
-                                                <span class="text-[10px] sm:text-xs lg:text-sm font-black uppercase tracking-widest ${answers[i] === q.answer ? 'text-green-600' : 'text-red-600'} block mb-1 lg:mb-2">Question ${i+1}</span>
-                                                <p class="font-bold text-slate-800 text-sm sm:text-base lg:text-lg leading-snug">${q.q}</p>
+                                            <div>
+                                                <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest ${answers[i] === q.answer ? 'text-green-600' : 'text-red-600'} block mb-1">Question ${i+1}</span>
+                                                <p class="font-bold text-slate-800 text-sm sm:text-base leading-snug">${q.q}</p>
                                             </div>
                                         </div>
-
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mt-4 lg:mt-5 ml-9 sm:ml-12 lg:ml-16">
+                                        
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mt-4 ml-9 sm:ml-12">
                                             ${q.options.map((opt, optIdx) => `
-                                                <div class="p-2.5 sm:p-3 lg:p-4 rounded-xl border ${
+                                                <div class="p-2.5 sm:p-3 rounded-xl border ${
                                                     optIdx === q.answer ? 'bg-green-100 border-green-300 text-green-900 font-bold ring-1 ring-green-400' :
                                                     optIdx === answers[i] ? 'bg-red-100 border-red-300 text-red-900 font-semibold' : 'bg-white border-slate-200 text-slate-500'
-                                                } flex justify-between items-center text-xs sm:text-sm lg:text-base">
+                                                } flex justify-between items-center text-xs sm:text-sm">
                                                     <span>${opt}</span>
                                                     ${optIdx === q.answer ? '<i class="fas fa-check-circle text-green-600"></i>' : (optIdx === answers[i] ? '<i class="fas fa-times-circle text-red-600"></i>' : '')}
                                                 </div>
                                             `).join('')}
                                         </div>
-                                        <div class="mt-4 lg:mt-5 ml-9 sm:ml-12 lg:ml-16 text-xs sm:text-sm lg:text-base text-blue-900 bg-blue-50 p-3 sm:p-4 lg:p-5 rounded-xl border border-blue-200 shadow-inner">
-                                            <strong class="flex items-center mb-1 lg:mb-2 text-blue-800"><i class="fas fa-graduation-cap mr-2"></i> Rule to Remember:</strong>
+                                        <div class="mt-4 ml-9 sm:ml-12 text-xs sm:text-sm text-blue-900 bg-blue-50 p-4 rounded-xl border border-blue-200 shadow-inner">
+                                            <strong class="flex items-center mb-1 text-blue-800"><i class="fas fa-graduation-cap mr-2"></i> Rule to Remember:</strong> 
                                             ${q.hint}
                                         </div>
                                     </div>
                                 `).join('')}
                             </div>
                         </div>
-
-                        <div class="mt-8 lg:mt-10 text-center">
-                             <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-sm lg:text-base font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-6 lg:px-8 py-2.5 lg:py-3 rounded-full transition-colors inline-flex items-center">
+                        
+                        <div class="mt-8 text-center">
+                             <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-sm font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-6 py-2.5 rounded-full transition-colors inline-flex items-center">
                                 <i class="fas fa-arrow-up mr-2"></i> Back to Top
                             </button>
                         </div>
@@ -464,8 +556,8 @@
             // Filter database for requested category and difficulty
             let filteredQuestions = allQuizData.filter(q => q.cat === currentCategory && q.diff === difficulty);
             
-            // Deep copy and shuffle the array to give a fresh 20-question set order
-            activeQuizData = shuffleArray([...filteredQuestions]);
+            // Deep copy, shuffle the array, and slice to grab EXACTLY 20 questions for the set.
+            activeQuizData = shuffleArray([...filteredQuestions]).slice(0, 20);
             
             // Set dynamic title text
             const catName = currentCategory === 'math' ? 'Quant Math' : 'Verbal Grammar';
