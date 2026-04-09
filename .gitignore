@@ -1,0 +1,9 @@
+# Local Environment Variables (This hides your API key!)
+.env
+.env.local
+
+# Node modules (You don't need to upload dependencies)
+node_modules/
+
+# Build output
+dist/

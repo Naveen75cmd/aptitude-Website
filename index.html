@@ -245,7 +245,10 @@
             { cat: 'grammar', diff: 'extreme', q: "Antonym of 'Profligate'", options: ["Extravagant", "Wasteful", "Thrifty", "Reckless"], answer: 2, hint: "Vocabulary: 'Profligate' means recklessly extravagant. Opposite is thrifty/frugal." }
         ];
 
-        const apiKey = ""; // Gemini API Key is injected by the environment
+        const apiKey = "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";
+        // Change this model based on your OpenRouter available models
+        // Popular options: "openai/gpt-3.5-turbo", "anthropic/claude-3-haiku", "meta-llama/llama-2-70b-chat"
+        const aiModel = "openai/gpt-3.5-turbo";
 
         let activeQuizData = [];
         let currentCategory = "";
@@ -742,24 +745,38 @@ Correct Answer: ${q.options[q.answer]}
 Standard Rule/Hint: ${q.hint}
 Keep the explanation clear, encouraging, and under 3 paragraphs. Focus on the logical steps.`;
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const url = `https://openrouter.ai/api/v1/chat/completions`;
             const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: "You are an expert tutor for aptitude tests. Be helpful, concise, and accurate." }] }
+                model: aiModel,
+                messages: [
+                    { role: "system", content: "You are an expert tutor for aptitude tests. Be helpful, concise, and accurate." },
+                    { role: "user", content: prompt }
+                ],
+                temperature: 0.7,
+                max_tokens: 1000
             };
 
             try {
                 const data = await fetchWithRetry(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
                     body: JSON.stringify(payload)
                 });
-                aiExplanation = data.candidates?.[0]?.content?.parts?.[0]?.text || "Unable to generate explanation.";
+
+                if (data.error) {
+                    console.error('OpenRouter API Error:', data.error);
+                    aiExplanation = `Error: ${data.error.message || "API request failed"}`;
+                } else {
+                    aiExplanation = data.choices?.[0]?.message?.content || "Unable to generate explanation.";
+                }
             } catch (error) {
-                console.error(error);
-                aiExplanation = "Sorry, the AI Tutor is currently unavailable. Please check your connection and try again.";
+                console.error('AI Tutor Error:', error);
+                aiExplanation = `Error: ${error.message}`;
             }
-            
+
             isAiLoading = false;
             render();
         }
@@ -777,43 +794,54 @@ Original Question: ${q.q}
 Original Options: ${q.options.join(', ')}
 Category: ${q.cat}
 
-Return a JSON object with the new question.`;
+Return ONLY a valid JSON object (no markdown, no code blocks) with this structure:
+{
+  "q": "The question text",
+  "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+  "answer": 0,
+  "hint": "How to solve it"
+}`;
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const url = `https://openrouter.ai/api/v1/chat/completions`;
             const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: "You are an expert test creator." }] },
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            q: { type: "STRING", description: "The question text" },
-                            options: { type: "ARRAY", items: { type: "STRING" }, description: "Exactly 4 options" },
-                            answer: { type: "INTEGER", description: "0-based index of the correct option (0 to 3)" },
-                            hint: { type: "STRING", description: "A brief explanation of how to solve it" }
-                        },
-                        required: ["q", "options", "answer", "hint"]
-                    }
-                }
+                model: aiModel,
+                messages: [
+                    { role: "system", content: "You are an expert test creator. Return ONLY valid JSON without any markdown formatting or extra text." },
+                    { role: "user", content: prompt }
+                ],
+                temperature: 0.7,
+                max_tokens: 500
             };
 
             try {
                 const data = await fetchWithRetry(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
                     body: JSON.stringify(payload)
                 });
-                const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (resultText) {
-                    activeGeneratedQuestion = JSON.parse(resultText);
+
+                if (data.error) {
+                    console.error('OpenRouter API Error:', data.error);
+                    alert(`Error: ${data.error.message || "Failed to generate question"}`);
+                } else {
+                    const resultText = data.choices?.[0]?.message?.content;
+                    if (resultText) {
+                        try {
+                            activeGeneratedQuestion = JSON.parse(resultText);
+                        } catch (parseError) {
+                            console.error('JSON Parse Error:', parseError, 'Response:', resultText);
+                            alert("Failed to parse AI response. Please try again.");
+                        }
+                    }
                 }
             } catch (error) {
-                console.error(error);
-                closeAIModal();
-                alert("Failed to generate a similar question. Please try again.");
+                console.error('Generate Question Error:', error);
+                alert(`Error: ${error.message}`);
             }
-            
+
             isSimilarLoading = false;
             render();
         }
