@@ -245,9 +245,8 @@
             { cat: 'grammar', diff: 'extreme', q: "Antonym of 'Profligate'", options: ["Extravagant", "Wasteful", "Thrifty", "Reckless"], answer: 2, hint: "Vocabulary: 'Profligate' means recklessly extravagant. Opposite is thrifty/frugal." }
         ];
 
-        const apiKey = "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";
-        // Change this model based on your OpenRouter available models
-        // Popular options: "openai/gpt-3.5-turbo", "anthropic/claude-3-haiku", "meta-llama/llama-2-70b-chat"
+        // API key is now stored securely on the backend server (.env file)
+        // Frontend only communicates with backend via /api/ai-tutor and /api/generate-question endpoints
         const aiModel = "openai/gpt-3.5-turbo";
 
         let activeQuizData = [];
@@ -745,29 +744,15 @@ Correct Answer: ${q.options[q.answer]}
 Standard Rule/Hint: ${q.hint}
 Keep the explanation clear, encouraging, and under 3 paragraphs. Focus on the logical steps.`;
 
-            const url = `https://openrouter.ai/api/v1/chat/completions`;
-            const payload = {
-                model: aiModel,
-                messages: [
-                    { role: "system", content: "You are an expert tutor for aptitude tests. Be helpful, concise, and accurate." },
-                    { role: "user", content: prompt }
-                ],
-                temperature: 0.7,
-                max_tokens: 1000
-            };
-
             try {
-                const data = await fetchWithRetry(url, {
+                const data = await fetchWithRetry('/api/ai-tutor', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify(payload)
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, model: aiModel })
                 });
 
                 if (data.error) {
-                    console.error('OpenRouter API Error:', data.error);
+                    console.error('API Error:', data.error);
                     aiExplanation = `Error: ${data.error.message || "API request failed"}`;
                 } else {
                     aiExplanation = data.choices?.[0]?.message?.content || "Unable to generate explanation.";
@@ -802,29 +787,15 @@ Return ONLY a valid JSON object (no markdown, no code blocks) with this structur
   "hint": "How to solve it"
 }`;
 
-            const url = `https://openrouter.ai/api/v1/chat/completions`;
-            const payload = {
-                model: aiModel,
-                messages: [
-                    { role: "system", content: "You are an expert test creator. Return ONLY valid JSON without any markdown formatting or extra text." },
-                    { role: "user", content: prompt }
-                ],
-                temperature: 0.7,
-                max_tokens: 500
-            };
-
             try {
-                const data = await fetchWithRetry(url, {
+                const data = await fetchWithRetry('/api/generate-question', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify(payload)
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, model: aiModel })
                 });
 
                 if (data.error) {
-                    console.error('OpenRouter API Error:', data.error);
+                    console.error('API Error:', data.error);
                     alert(`Error: ${data.error.message || "Failed to generate question"}`);
                 } else {
                     const resultText = data.choices?.[0]?.message?.content;
